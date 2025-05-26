@@ -1,0 +1,100 @@
+---
+title: "Bias_Correction"
+author: "Flueckiger_Rubens"
+date: "2025-04-01"
+output: html_document
+---
+
+# Bias Correction
+
+This file plots the measured values of the sensor_3 vs. the permanent measurement devices of the Bernometer
+
+## Import packages
+
+```{r}
+library(ggplot2)
+```
+
+## Importing File
+
+```{r}
+data = readr::read_csv2("../data/Bias_CSV.csv")
+```
+
+## Errorvalues
+
+Following errorvalues are given:
+
+*Messwagen*
+
+- Temperature [°C]: 0.1
+- Relative air huimidty [%]: 1.5
+
+*Bernometer* 
+
+- Temperature [°C]: 0.2
+- Relative air humidity [%]: 1.8
+
+```{r}
+# Messwagen
+
+eWt = 0.1
+eWlfk = 1.5
+
+#Bernometer
+
+eSt = 0.2
+eSlfk = 1.8
+```
+
+## Plots
+
+color codes
+
+```{r}
+colors = c("Messwagen" = "red", "Referenzstation" = "deepskyblue4")
+```
+
+Plotting temperature values
+
+```{r}
+
+#Open jpeg
+jpeg("../Images/Bias_Correction/Bias_corr.jpeg", height = 486, width = 1200, res = 108)
+
+#Creating temperature plot
+p1 = ggplot(data, aes(x = Messort)) + #x-Axis
+  geom_errorbar(aes(ymin = T_Messwagen - eWt, ymax = T_Messwagen + eWt), width = 0.1) + #Errorbar Messwagen
+  geom_errorbar(aes(ymin = T_Messstation - eSt, ymax = T_Messstation + eSt), width = 0.1) + #Errorbar Messstation
+  geom_point(aes(y = T_Messstation, color = "Referenzstation"), size = 2.5) + #Points Messstation
+  geom_point(aes(y = T_Messwagen, color = "Messwagen"), size = 2.5) + #Points Messwagen
+  labs(y = "Temperatur [°C]", x = "Messort", color = "") + #Axis label & Legend
+  ggtitle("Bias Korrektur der Temperatur") + #Title
+  scale_color_manual(values = colors) + #Legend element color
+  annotate(geom = "label", x = 0.6, y = 1.79, label = "I", family = "serif", size = 6) + #Plot number
+  theme_bw() + #Plot aesthetic
+  theme(legend.position = "none") + #Only one legend needed, so hide this
+  theme(plot.margin = margin(0.2, 2, 0.2, 0.2, "cm")) + #Set Plot margins
+  theme(plot.title = element_text(hjust = 0.5)) #Center title
+
+#Creating relative air humidity plot
+p2 = ggplot(data, aes(x = Messort)) + #x-Axis
+  geom_errorbar(aes(ymin = LF_Messwagen - eWlfk, ymax = LF_Messwagen + eWlfk), width = 0.1) + #Errorbar Messwagen
+  geom_errorbar(aes(ymin = LF_Messstation - eSlfk, ymax = LF_Messstation + eSlfk), width = 0.1) + #Errorbar Messstation
+  geom_point(aes(y = LF_Messstation, color = "Referenzstation"), size = 2.5) + #Points Messstation
+  geom_point(aes(y = LF_Messwagen, color = "Messwagen"), size = 2.5) + #Points Messwagen
+  labs(y = "Luftfeuchtigkeit [%]", x = "Messort", color = "") + #Axis label & Legend
+  ggtitle("Bias Korrektur der Luftfeuchtigkeit") + #Title
+  scale_color_manual(values = colors) + #Legend element color
+  annotate(geom = "label", x = 0.6, y = 81.5, label = "II", family = "serif", size = 6) + #Plot number
+  theme_bw() + #Plot aesthetic
+  theme(plot.margin = margin(0.2, 0.2, 0.2, -1, "cm")) + #Set Plot margins
+  theme(plot.title = element_text(hjust = 0.5)) #Center title
+
+#Combine plots
+cowplot::plot_grid(p1, p2)
+
+#Close and safe jpeg
+dev.off()
+
+```

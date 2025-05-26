@@ -1,0 +1,283 @@
+---
+title: "Reference_Station_Zollikofen"
+author: "Flueckiger_Rubens"
+date: "2025-04-18"
+output: html_document
+---
+
+# Statistics of reference station Zollikofen
+
+In this Markdown characteristics of the reference station Bern Zollikofen are displayed
+
+## Importing packages
+
+```{r}
+library(ggplot2)
+library(dplyr)
+library(lubridate)
+library(RColorBrewer)
+library(scales)
+```
+
+## Importing dataset
+
+```{r}
+station = read.table("../data/Messwerte.csv", sep = ";", header = T)
+```
+
+## The dataset
+
+The dataset contains:
+- stn: Station name (3 letter)
+- date: Date of measuring, YYYYMMDD
+- time: Time of measuring, HH:MM
+- tre200s0: Air temperature 2m above ground [°C]
+- ure200s0: Relative air humidity 2m above ground [%]
+- sre200z0: Sunshine duration, 10min sum [min]
+- fu3010z0: Wind speed, mean over 10min [km/h]
+- dkl010z0: Wind direction, mean over 10min [°]
+
+## Dataset preparation
+
+In this step following processes are performed:
+- remove stn
+- converting date into a date form
+- rename tre200s0 to temp
+- rename ure200s0 to lfk
+- rename sre000z0 to sundur
+- rename fu3010z0 to windspeed
+- rename dkl010z0 to winddir
+
+```{r}
+
+station = select(station, -stn)
+station = mutate(station, date = ymd(date))
+station = rename(station, temp = tre200s0)
+station = rename(station, lfk = ure200s0) 
+station = rename(station, sundur = sre000z0)
+station = rename(station, windspeed = fu3010z0)
+station = rename(station, winddir = dkl010z0)
+
+```
+
+## Function for Windrose diagram
+
+Source of Code (adjusted version):
+
+Guilherme Araujo Lima da Silva, 2016. Wind rose with ggplot (R)?. Link: https://stackoverflow.com/questions/17266780/wind-rose-with-ggplot-r. Called: 21.04.2025.
+Note: Changes were done to rename Axis & Legend
+
+```{r}
+
+plot.windrose <- function(data,
+                          spd,
+                          dir,
+                          spdres = 2,
+                          dirres = 22.5,
+                          spdmin = 2,
+                          spdmax = 20,
+                          spdseq = NULL,
+                          palette = "YlGnBu",
+                          countmax = NA,
+                          debug = 0){
+
+
+  # Look to see what data was passed in to the function
+  if (is.numeric(spd) & is.numeric(dir)){
+    # assume that we've been given vectors of the speed and direction vectors
+    data <- data.frame(spd = spd,
+                       dir = dir)
+    spd = "spd"
+    dir = "dir"
+  } else if (exists("data")){
+    # Assume that we've been given a data frame, and the name of the speed 
+    # and direction columns. This is the format we want for later use.    
+  }  
+
+  # Tidy up input data ----
+  n.in <- NROW(data)
+  dnu <- (is.na(data[[spd]]) | is.na(data[[dir]]))
+  data[[spd]][dnu] <- NA
+  data[[dir]][dnu] <- NA
+
+  # figure out the wind speed bins ----
+  if (missing(spdseq)){
+    spdseq <- seq(spdmin,spdmax,spdres)
+  } else {
+    if (debug >0){
+      cat("Using custom speed bins \n")
+    }
+  }
+  # get some information about the number of bins, etc.
+  n.spd.seq <- length(spdseq)
+  n.colors.in.range <- n.spd.seq - 1
+
+  # create the color map
+  spd.colors <- colorRampPalette(brewer.pal(min(max(3,
+                                                    n.colors.in.range),
+                                                min(9,
+                                                    n.colors.in.range)),                                               
+                                            palette))(n.colors.in.range)
+
+  if (max(data[[spd]],na.rm = TRUE) > spdmax){    
+    spd.breaks <- c(spdseq,
+                    max(data[[spd]],na.rm = TRUE))
+    spd.labels <- c(paste(c(spdseq[1:n.spd.seq-1]),
+                          '-',
+                          c(spdseq[2:n.spd.seq])),
+                    paste(spdmax,
+                          "-",
+                          max(data[[spd]],na.rm = TRUE)))
+    spd.colors <- c(spd.colors, "grey60")
+  } else{
+    spd.breaks <- spdseq
+    spd.labels <- paste(c(spdseq[1:n.spd.seq-1]),
+                        '-',
+                        c(spdseq[2:n.spd.seq]))    
+  }
+  data$spd.binned <- cut(x = data[[spd]],
+                         breaks = spd.breaks,
+                         labels = spd.labels,
+                         ordered_result = TRUE)
+
+  # figure out the wind direction bins
+  dir.breaks <- c(-dirres/2,
+                  seq(dirres/2, 360-dirres/2, by = dirres),
+                  360+dirres/2)  
+  dir.labels <- c(paste(360-dirres/2,"-",dirres/2),
+                  paste(seq(dirres/2, 360-3*dirres/2, by = dirres),
+                        "-",
+                        seq(3*dirres/2, 360-dirres/2, by = dirres)),
+                  paste(360-dirres/2,"-",dirres/2))
+  # assign each wind direction to a bin
+  dir.binned <- cut(data[[dir]],
+                    breaks = dir.breaks,
+                    ordered_result = TRUE)
+  levels(dir.binned) <- dir.labels
+  data$dir.binned <- dir.binned
+
+  # Run debug if required ----
+  if (debug>0){    
+    cat(dir.breaks,"\n")
+    cat(dir.labels,"\n")
+    cat(levels(dir.binned),"\n")
+
+  }  
+
+  # create the plot ----
+  p.windrose <- ggplot(data = data,
+                       aes(x = dir.binned,
+                           fill = spd.binned
+                           ,y = (..count..)/sum(..count..)
+                           ))+
+    geom_bar() + 
+    scale_x_discrete(drop = FALSE,
+                     labels = c("N","NNE","NE","ENE", "E", 
+                                "ESE", "SE","SSE", 
+                                "S","SSW", "SW","WSW", "W", 
+                                "WNW","NW","NNW")) +
+    coord_polar(start = -((dirres/2)/360) * 2*pi) +
+    scale_fill_manual(name = "Windgeschwindigkeit [m/s]", 
+                      values = spd.colors,
+                      drop = FALSE) +
+    theme(axis.title.x = element_blank()) + 
+    scale_y_continuous(labels = percent) +
+    ylab("Frequenz")
+
+  # adjust axes if required
+  if (!is.na(countmax)){
+    p.windrose <- p.windrose +
+      ylim(c(0,countmax))
+  }
+
+  # print the plot
+  print(p.windrose)  
+
+  # return the handle to the wind rose
+  return(p.windrose)
+}
+
+
+```
+
+## Create plots
+
+In this step following plots are created:
+- Temperature evolution over time
+- Relative humidity evolution over time
+- Sunshine duration (sum) over 10 minutes
+- Windspeed (mean) over 10 min
+- winddirection (mean) over 10 min
+
+Then save it as jpeg
+
+```{r}
+
+#Open jpeg
+jpeg("../Images/Reference_Station_Zollikofen/Referenzstation.jpeg", height = 1000, width = 1200, res = 108) 
+
+#Temperature
+p_temp = ggplot(data = station, aes(x = time, y = temp, group = F)) + #Add variables
+  geom_line() + geom_point(shape = 16) + #Add points + line
+  xlab("Zeit") + ylab("Temperatur [°C]") + ggtitle("Mittlere Temperatur über 10 Minuten") + #Add title + axis label
+  annotate(geom = "label", x = 1, y = 0.98, label = "I", family = "serif", size = 6) + #Plot number
+  theme_bw() + #Change Plot motive
+  theme(plot.title = element_text(hjust = 0.5)) #Center title
+
+#Relative Humidity
+p_lfk = ggplot(data = station, aes(x = time, y = lfk, group = F)) + #Add variables
+  geom_line() + geom_point(shape = 16) + #Add points + line
+  xlab("Zeit") + ylab("Luftfeuchtigkeit [%]") + ggtitle("Mittlere Luftfeuchtigkeit über 10 Minuten") + #Add title + axis label
+  annotate(geom = "label", x = 13, y = 77.8, label = "II", family = "serif", size = 6) + #Plot number
+  theme_bw() + #Change Plot motive
+  theme(plot.title = element_text(hjust = 0.5)) #Center title
+
+#Sun duration
+p_sundur = ggplot(data = station, aes(x = time, y = sundur, group = F)) + #Add variables
+  geom_line() + geom_point(shape = 16) + #Add points + line
+  xlab("Zeit") + ylab("Sonnenscheindauer [min]") + ggtitle("Sonnenscheindauer in 10 Minuten") + #Add title + axis label
+  ylim(0, 10) +
+  annotate(geom = "label", x = 1, y = 9.6, label = "III", family = "serif", size = 6) + #Plot number
+  theme_bw() + #Change Plot motive
+  theme(plot.title = element_text(hjust = 0.5)) #Center title
+
+#Wind speed
+p_windspeed = ggplot(data = station, aes(x = time, y = windspeed, group = F)) + #Add variables
+  geom_line() + geom_point(shape = 16) + #Add points + line
+  xlab("Zeit") + ylab("Windgeschwindigkeit [km/h]") + ggtitle("Mittlere Windgeschwindigkeit über 10 Minuten") + #Add title + axis label
+  annotate(geom = "label", x = 1, y = 4.15, label = "IV", family = "serif", size = 6) + #Plot number
+  theme_bw() + #Change Plot motive
+  theme(plot.title = element_text(hjust = 0.5)) #Center title
+
+#Wind direction
+p_winddir = plot.windrose(data = station, spd = station$windspeed, dir = station$winddir, spdmin = 1, spdmax = 5, spdseq = c(1,2,3,4,5), palette = "RdBu") +
+  ggtitle("Windrosendiagramm Zollikofen") +
+  theme_bw() +
+  theme(plot.title = element_text(hjust = 0.5)) + #Center title
+  theme(axis.title.x.bottom = element_blank())
+
+#Combine all plots
+cowplot::plot_grid(p_temp, p_lfk, p_sundur, p_windspeed, p_winddir, nrow = 3, ncol = 2)
+
+#Save jpeg
+dev.off()
+
+```
+
+## Statistics
+
+Calculating mean, minimum and maximum value of each variable
+
+```{r}
+
+Statistics = c("Minimum", "Maximum", "Mittelwert")
+
+#Minimum
+Temperatur = c(min(station$temp), max(station$temp), mean(station$temp))
+Rel_Luftfeuchtigkeit = c(min(station$lfk), max(station$lfk), mean(station$lfk))
+Sonnenscheindauer = c(min(station$sundur), max(station$sundur), mean(station$sundur))
+Windgeschwindigkeit = c(min(station$windspeed), max(station$windspeed), mean(station$windspeed))
+
+stat_zoll = data.frame(Statistics, Temperatur, Rel_Luftfeuchtigkeit, Sonnenscheindauer, Windgeschwindigkeit)
+
+```

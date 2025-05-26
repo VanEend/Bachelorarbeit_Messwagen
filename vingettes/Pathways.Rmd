@@ -1,0 +1,80 @@
+---
+title: "Pathways"
+author: "Flueckiger_Rubens"
+date: "2025-04-01"
+output: html_document
+---
+
+# Pathway plots
+
+In this file all pathways for each sensor for temperature and relative air humidity gets plotted
+
+## Import packages
+
+```{r}
+library(ggplot2)
+```
+
+## Importing file
+
+```{r}
+lap = read.table("../data/Distanz_&_Hohe_GR_2.csv", sep = ";", header = T)
+```
+
+## Plots
+
+color codes
+
+```{r}
+colors = c("Sensor_0.5" = "red", "Sensor_1" = "darkorange", "Sensor_2" = "darkgreen", "Sensor_3" = "blue")
+```
+
+Pathways
+
+```{r}
+
+#Open jpeg
+jpeg("../Images/Pathways/Pathways.jpeg", height = 486, width = 1200, res = 108)
+
+p1 = ggplot(lap, aes(x = Distanz_Runsum)) + #x-Axis
+  geom_line(aes(y = Sensor1_LF, color = "Sensor_0.5")) + #Sensor_0.5
+  geom_line(aes(y = Sensor2_LF, color = "Sensor_1")) + #Sensor_1
+  geom_line(aes(y = Sensor3_LF, color = "Sensor_2")) + #Sensor_2
+  geom_line(aes(y = Sensor4_LF, color = "Sensor_3")) + #Sensor_3
+  geom_line(aes(y = mean(Sensor1_LF), color = "Sensor_0.5"), linetype = "dashed") + #Mean Sensor_0.5
+  geom_line(aes(y = mean(Sensor2_LF), color = "Sensor_1"), linetype = "dashed") + #Mean Sensor_1
+  geom_line(aes(y = mean(Sensor3_LF), color = "Sensor_2"), linetype = "dashed") + #Mean Sensor_2
+  geom_line(aes(y = mean(Sensor4_LF), color = "Sensor_3"), linetype = "dashed") + #Mean Sensor_3
+  labs(x = "Distanz [m]", y = "Luftfeuchtigkeit [%]", color = "Legende") + #Axis label & Legend
+  scale_color_manual(values = colors) + #Coloring legend
+  ggtitle("Luftfeuchtigkeitsverlauf") + #Adding title
+  annotate(geom = "label", x = 0, y = 81, label = "II", family = "serif", size = 6) + #Plot number
+  theme_bw() + #Changing plot type
+  theme(plot.margin = margin(0.2, 0.2, 0.2, -1, "cm")) + #Set Plot margins
+  theme(plot.title = element_text(hjust = 0.5)) #Center title
+
+p2 = ggplot(lap, aes(x = Distanz_Runsum)) + #x-Axis
+  geom_line(aes(y = Sensor1_T, color = "Sensor_0.5")) + #Sensor_0.5
+  geom_line(aes(y = Sensor2_T, color = "Sensor_1")) + #Sensor_1
+  geom_line(aes(y = Sensor3_T, color = "Sensor_2")) + #Sensor_2
+  geom_line(aes(y = Sensor4_T, color = "Sensor_3")) + #Sensor_3
+  geom_line(aes(y = mean(Sensor1_T), color = "Sensor_0.5"), linetype = "dashed") + #Mean Sensor_0.5
+  geom_line(aes(y = mean(Sensor2_T), color = "Sensor_1"), linetype = "dashed") + #Mean Sensor_1
+  geom_line(aes(y = mean(Sensor3_T), color = "Sensor_2"), linetype = "dashed") + #Mean Sensor_2
+  geom_line(aes(y = mean(Sensor4_T), color = "Sensor_3"), linetype = "dashed") + #Mean Sensor_3
+  labs(x = "Distanz [m]", y = "Temperatur [°C]", color = "Legende" ) + #Axis label & Legend
+  scale_color_manual(values = colors) + #Coloring legend
+  ggtitle("Temperaturverlauf") + #Adding title
+  annotate(geom = "label", x = 4242, y = 1.93, label = "I", family = "serif", size = 6) + #Plot number
+  theme_bw() + #Changing plot type
+  theme(legend.position = "none") + #Only one legend needed, so hide this
+  theme(plot.margin = margin(0.2, 2, 0.2, 0.2, "cm")) + #Set Plot margins
+  theme(plot.title = element_text(hjust = 0.5)) #Center title
+
+cowplot::plot_grid(p2, p1, ncol = 2)
+
+#Close and save jpeg
+dev.off()
+
+```
+

@@ -1,0 +1,150 @@
+---
+title: "Var_between_sensors"
+author: "Flueckiger_Rubens"
+date: "2025-04-01"
+output: html_document
+---
+
+# Variance between Sensors
+
+In this file differences between a reference sensor to the others are visualised
+Here I took Sensor_3 (3m above ground) as reference Sensor. The choice roots from measurement conventions for devices at this height. Additionally, Bias-correction was performed at the same height, whereas a cross-validation between all sensors where not performed.
+
+*Note:* Due to the moist adiabatic lapse rate being at Ts = 0.0069K/m (for T = 273.2K or 0°C) and Ts = 0.0036K/m (for T = 303K or 29.8°C) [Pal, 2001, P.68], the decrease in Temperature is negligible (in our case: 3m * 0.0036K/m = 0.0108K decrease) and high degree differences (might) only occur due to device inaccuracy/bias.
+
+Arya, S. Pal (2001), Introduction to Micrometeorology.Vereinigtes Königreich,Elsevier Science,2001.
+
+## Import packages
+
+```{r}
+library(dplyr)
+library(ggplot2)
+```
+
+## Importing file
+
+```{r}
+lap = read.table("../data/Distanz_&_Hohe_GR_2.csv", sep = ";", header = T)
+```
+## New dataset
+
+In this step a new dataset *anomaly* gets created. The file consists of:
+- Messung: This is the number of measurment
+- Reference sensor: Sensor_1 as reference (all values are = 0)
+- Remaining sensors: sensor - reference sensor
+- Both reference sensor and remaining sensors for temperature as well as for relative air humidity
+- Distanz_Runsum: Distance from measurment start in meters
+
+```{r}
+
+#Creating data frame
+Messung = lap$Messung
+anomaly = data.frame(Messung)
+
+#Adding Values for temperature
+anomaly = mutate(anomaly, Sensor1_T = lap$Sensor1_T - lap$Sensor4_T) %>% #Sensor_0.5
+  mutate(anomaly, Sensor2_T = lap$Sensor2_T - lap$Sensor4_T) %>% #Sensor_1
+  mutate(anomaly, Sensor3_T = lap$Sensor3_T - lap$Sensor4_T) %>% #Sensor_2
+  mutate(anomaly, Sensor4_T = lap$Sensor4_T - lap$Sensor4_T) #Sensor_3
+
+#Adding Values for relative air humidity
+anomaly = mutate(anomaly, Sensor1_LF = lap$Sensor1_LF - lap$Sensor4_LF) %>% #Sensor_0.5
+  mutate(anomaly, Sensor2_LF = lap$Sensor2_LF - lap$Sensor4_LF) %>% #Sensor_1
+  mutate(anomaly, Sensor3_LF = lap$Sensor3_LF - lap$Sensor4_LF) %>% #Sensor_2
+  mutate(anomaly, Sensor4_LF = lap$Sensor4_LF - lap$Sensor4_LF) #Sensor_3
+
+#Adding distance
+anomaly = mutate(anomaly, Distance = lap$Distanz_Runsum)
+
+```
+
+## Plotting
+
+color codes
+
+```{r}
+colors = c("Sensor_0.5" = "red", "Sensor_1" = "orange", "Sensor_2" = "darkgreen", "Sensor_3" = "blue", "Instrumentenfehler" = "lightblue")
+```
+
+Temperature
+
+```{r}
+
+#Open jpeg
+jpeg("../Images/Var_between_sensors/temp.jpeg", height = 486, width = 780, res = 108)
+
+ggplot(anomaly, aes(x = Distance)) + #x-Axis
+  geom_ribbon(aes(ymin = -0.1, ymax = 0.1, fill = "Instrumentenfehler"), alpha = 1) + #Filling
+  geom_line(aes(y = Sensor1_T, color = "Sensor_0.5")) + #Sensor_0.5
+  geom_line(aes(y = Sensor2_T, color = "Sensor_1")) + #Sensor_1
+  geom_line(aes(y = Sensor3_T, color = "Sensor_2")) + #Sensor_2
+  geom_line(aes(y = Sensor4_T, color = "Sensor_3")) + #Sensor_3
+  geom_line(aes(y = mean(Sensor1_T), color = "Sensor_0.5"), linetype = "dashed") + #Mean Sensor_0.5
+  geom_line(aes(y = mean(Sensor2_T), color = "Sensor_1"), linetype = "dashed") + #Mean Sensor_1
+  geom_line(aes(y = mean(Sensor3_T), color = "Sensor_2"), linetype = "dashed") + #Mean Sensor_2
+  geom_line(aes(y = mean(Sensor4_T), color = "Sensor_3"), linetype = "dashed") + #Mean Sensor_3
+  labs(x = "Distanz [m]", y = "Temperaturdifferenz [°C]", #Axis Label
+       color = "Legende", fill = "") + #Legend
+  scale_color_manual(values = colors) + #Coloring legend
+  scale_fill_manual(values = colors) +
+  ggtitle("Abweichung zum Sensor_3") + #Adding title
+  theme_bw() + #Changing plot type
+  theme(plot.title = element_text(hjust = 0.5)) #Center title
+
+#Close and save jpeg
+dev.off()
+
+```
+
+Relative air humidity
+
+```{r}
+
+#Open jpeg
+jpeg("../Images/Var_between_sensors/humidity.jpeg", height = 486, width = 780, res = 108)
+
+ggplot(anomaly, aes(x = Distance)) + #x-Axis
+  geom_ribbon(aes(ymin = -1.5, ymax = 1.5, fill = "Instrumentenfehler"), alpha = 1) + #Filling
+  geom_line(aes(y = Sensor1_LF, color = "Sensor_0.5")) + #Sensor_0.5
+  geom_line(aes(y = Sensor2_LF, color = "Sensor_1")) + #Sensor_1
+  geom_line(aes(y = Sensor3_LF, color = "Sensor_2")) + #Sensor_2
+  geom_line(aes(y = Sensor4_LF, color = "Sensor_3")) + #Sensor_3
+  geom_line(aes(y = mean(Sensor1_LF), color = "Sensor_0.5"), linetype = "dashed") + #Mean Sensor_0.5
+  geom_line(aes(y = mean(Sensor2_LF), color = "Sensor_1"), linetype = "dashed") + #Mean Sensor_1
+  geom_line(aes(y = mean(Sensor3_LF), color = "Sensor_2"), linetype = "dashed") + #Mean Sensor_2
+  geom_line(aes(y = mean(Sensor4_LF), color = "Sensor_3"), linetype = "dashed") + #Mean Sensor_3
+  labs(x = "Distanz [m]", y = "Luftfeuchtigkeitsdifferenz [%]", #Axis label
+    color = "Legende", fill = "") + #Legend
+  scale_color_manual(values = colors) + #Coloring legend
+  scale_fill_manual(values = colors) +
+  ggtitle("Abweichung zum Sensor_3") + #Adding title
+  theme_bw() + #Changing plot type
+  theme(plot.title = element_text(hjust = 0.5)) #Center title
+
+#Close and save jpeg
+dev.off()
+
+```
+
+## Statistics
+
+```{r}
+
+statistics = c("Minimum", "Maximum", "Mean")
+
+#Temperature
+Sensor_1 = c(min(anomaly$Sensor1_T), max(anomaly$Sensor1_T), mean(anomaly$Sensor1_T))
+Sensor_2 = c(min(anomaly$Sensor2_T), max(anomaly$Sensor2_T), mean(anomaly$Sensor2_T))
+Sensor_3 = c(min(anomaly$Sensor3_T), max(anomaly$Sensor3_T), mean(anomaly$Sensor3_T))
+
+#Relative air humidity
+Zenzor_1 = c(min(anomaly$Sensor1_LF), max(anomaly$Sensor1_LF), mean(anomaly$Sensor1_LF))
+Zenzor_2 = c(min(anomaly$Sensor2_LF), max(anomaly$Sensor2_LF), mean(anomaly$Sensor2_LF))
+Zenzor_3 = c(min(anomaly$Sensor3_LF), max(anomaly$Sensor3_LF), mean(anomaly$Sensor3_LF))
+
+#Convert to dataframe
+stat_Temp = data.frame(statistics, Sensor_1, Sensor_2,Sensor_3)
+stat_lfk = data.frame(statistics, Zenzor_1, Zenzor_2, Zenzor_3)
+```
+
+
