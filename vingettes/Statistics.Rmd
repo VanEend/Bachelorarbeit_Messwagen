@@ -2,24 +2,24 @@
 title: "Statistics"
 author: "Flueckiger_Rubens"
 date: "2025-04-01"
-output: html_document
+output: 
+  html_document:
+    toc: true
 ---
 
 # Statistics
 
 This file plots statistics of all 4 sensors
 
-## Import packages
+## Import packages and files
 
-```{r}
+```{r, message=FALSE, warning=FALSE}
+#Packages
 library(dplyr)
-```
 
-## Importing files
-
-```{r}
-s_lap = readr::read_csv2("../data/Distanz_&_Hohe_KR.csv")
-l_lap = readr::read_csv2("../data/Distanz_&_Hohe_GR_2.csv")
+#Files
+s_lap <- read.table("../data/Distanz_&_Hohe_KR.csv", sep = ";", header = T)
+l_lap <- read.table("../data/Distanz_&_Hohe_GR.csv", sep = ";", header = T)
 ```
 
 ## Information about sensors
@@ -29,11 +29,15 @@ l_lap = readr::read_csv2("../data/Distanz_&_Hohe_GR_2.csv")
 3. 2m above ground, colour = green
 4. 3m above ground, colour = orange
 
-```{r}
-Sensor = c(1, 2, 3, 4)
-Height_sensor_m = c(0.5, 1, 2, 3)
-Colour = c("Red","Blue","Green","Orange")
-Info_Sensors = data.frame(Sensor, Height_sensor_m, Colour)
+```{r, echo=FALSE}
+Sensor <- c(1, 2, 3, 4)
+Height_sensor_m <- c(0.5, 1, 2, 3)
+Colour <- c("Rot","Blau","Grün","Orange")
+Info_Sensors <- data.frame(Sensor, Height_sensor_m, Colour)
+
+#Table
+knitr::kable(Info_Sensors, capture = "Information über Messstationen",
+             col.names = c("Sensor", "Höhe", "Farbe"))
 ```
 
 ## Statistics about each sensor
@@ -41,54 +45,61 @@ Info_Sensors = data.frame(Sensor, Height_sensor_m, Colour)
 Mean quadratic deviation from sensor_1
 
 To solve this problem, first a new dataset *anomaly* gets created. It contains:
+
 - Messung: This is the number of measurment
 - Reference sensor: Sensor_3 as reference (all values are = 0)
-- Remaining sensors: (sensor - reference sensor)^2
+- Remaining sensors: (sensor - reference sensor)$^2$
 - Both reference sensor and remaining sensors for temperature as well as for relative air humidity
 
-```{r}
-
+```{r, echo=FALSE}
 #Creating data frame
-Messung = l_lap$Messung
-anomaly = data.frame(Messung)
+Messung <- l_lap$Messung
+anomaly <- data.frame(Messung)
 
 #Adding Values for temperature
-anomaly = mutate(anomaly, Sensor1_T = (l_lap$Sensor1_T - l_lap$Sensor4_T)^2) %>% #Sensor_0.5
+anomaly <- mutate(anomaly, Sensor1_T = (l_lap$Sensor1_T - l_lap$Sensor4_T)^2) %>% #Sensor_0.5
   mutate(anomaly, Sensor2_T = (l_lap$Sensor2_T - l_lap$Sensor4_T)^2) %>% #Sensor_1
   mutate(anomaly, Sensor3_T = (l_lap$Sensor3_T - l_lap$Sensor4_T)^2) %>% #Sensor_2
   mutate(anomaly, Sensor4_T = (l_lap$Sensor4_T - l_lap$Sensor4_T)^2) #Sensor_3
 
 #Adding Values for relative air humidity
-anomaly = mutate(anomaly, Sensor1_LF = (l_lap$Sensor1_LF - l_lap$Sensor4_LF)^2) %>% #Sensor_0.5
+anomaly <- mutate(anomaly, Sensor1_LF = (l_lap$Sensor1_LF - l_lap$Sensor4_LF)^2) %>% #Sensor_0.5
   mutate(anomaly, Sensor2_LF = (l_lap$Sensor2_LF - l_lap$Sensor4_LF)^2) %>% #Sensor_1
   mutate(anomaly, Sensor3_LF = (l_lap$Sensor3_LF - l_lap$Sensor4_LF)^2) %>% #Sensor_2
   mutate(anomaly, Sensor4_LF = (l_lap$Sensor4_LF - l_lap$Sensor4_LF)^2) #Sensor_3
-
 ```
 
 Calculating mean, minimum and maximum value of each sensor 
 
 Temperature
 
-```{r}
+```{r, echo=FALSE}
+Statistics <- c("Minimum", "Maximum", "Mean","Variance_to_Sensor_3")
+Sensor_1t <- c(min(l_lap$Sensor1_T), max(l_lap$Sensor1_T), mean(l_lap$Sensor1_T), mean(anomaly$Sensor1_T))
+Sensor_2t <- c(min(l_lap$Sensor2_T), max(l_lap$Sensor2_T), mean(l_lap$Sensor2_T), mean(anomaly$Sensor2_T))
+Sensor_3t <- c(min(l_lap$Sensor3_T), max(l_lap$Sensor3_T), mean(l_lap$Sensor3_T), mean(anomaly$Sensor3_T))
+Sensor_4t <- c(min(l_lap$Sensor4_T), max(l_lap$Sensor4_T), mean(l_lap$Sensor4_T), mean(anomaly$Sensor4_T))
 
-Statistics = c("Minimum", "Maximum", "Mean","Variance_to_Sensor_3")
-Sensor_1t = c(min(l_lap$Sensor1_T), max(l_lap$Sensor1_T), mean(l_lap$Sensor1_T), mean(anomaly$Sensor1_T))
-Sensor_2t = c(min(l_lap$Sensor2_T), max(l_lap$Sensor2_T), mean(l_lap$Sensor2_T), mean(anomaly$Sensor2_T))
-Sensor_3t = c(min(l_lap$Sensor3_T), max(l_lap$Sensor3_T), mean(l_lap$Sensor3_T), mean(anomaly$Sensor3_T))
-Sensor_4t = c(min(l_lap$Sensor4_T), max(l_lap$Sensor4_T), mean(l_lap$Sensor4_T), mean(anomaly$Sensor4_T))
+#Create dataframe
+stat_T <- data.frame(Statistics, Sensor_1t, Sensor_2t, Sensor_3t, Sensor_4t)
 
-stat_T = data.frame(Statistics, Sensor_1t, Sensor_2t, Sensor_3t, Sensor_4t)
+#Create table
+knitr::kable(stat_T, capture = "Statistik Temperatur",
+             col.names = c("Statistik", "Sensor 1", "Sensor 2", "Sensor 3", "Sensor 4"))
 ```
 
 Relative air humidity
 
-```{r}
+```{r, echo=FALSE}
+Sensor_1lfk <- c(min(l_lap$Sensor1_LF), max(l_lap$Sensor1_LF), mean(l_lap$Sensor1_LF), mean(anomaly$Sensor1_LF))
+Sensor_2lfk <- c(min(l_lap$Sensor2_LF), max(l_lap$Sensor2_LF), mean(l_lap$Sensor2_LF), mean(anomaly$Sensor2_LF))
+Sensor_3lfk <- c(min(l_lap$Sensor3_LF), max(l_lap$Sensor3_LF), mean(l_lap$Sensor3_LF), mean(anomaly$Sensor3_LF))
+Sensor_4lfk <- c(min(l_lap$Sensor4_LF), max(l_lap$Sensor4_LF), mean(l_lap$Sensor4_LF), mean(anomaly$Sensor4_LF))
 
-Sensor_1lfk = c(min(l_lap$Sensor1_LF), max(l_lap$Sensor1_LF), mean(l_lap$Sensor1_LF), mean(anomaly$Sensor1_LF))
-Sensor_2lfk = c(min(l_lap$Sensor2_LF), max(l_lap$Sensor2_LF), mean(l_lap$Sensor2_LF), mean(anomaly$Sensor2_LF))
-Sensor_3lfk = c(min(l_lap$Sensor3_LF), max(l_lap$Sensor3_LF), mean(l_lap$Sensor3_LF), mean(anomaly$Sensor3_LF))
-Sensor_4lfk = c(min(l_lap$Sensor4_LF), max(l_lap$Sensor4_LF), mean(l_lap$Sensor4_LF), mean(anomaly$Sensor4_LF))
+#Create table
+stat_LFK <- data.frame(Statistics,Sensor_1lfk,Sensor_2lfk,Sensor_3lfk,Sensor_4lfk)
 
-stat_LFK = data.frame(Statistics,Sensor_1lfk,Sensor_2lfk,Sensor_3lfk,Sensor_4lfk)
+#Create table
+knitr::kable(stat_LFK, capture = "Statistik Temperatur",
+             col.names = c("Statistik", "Sensor 1", "Sensor 2", "Sensor 3", "Sensor 4"))
 ```
