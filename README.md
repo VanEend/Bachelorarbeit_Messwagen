@@ -9,7 +9,7 @@ This GitHub repository contains files used to create plots of:
 
 ## Folders
 
-This repository contains five folders: *Functions*, *Images*, *data*, *vingettes* and *vingettes_julia*. In the following paragraphs every folder is described more closely.
+This repository contains five folders: *Functions*, *Images*, *Metadaten*, *data*, *vingettes* and *vingettes_julia*. In the following paragraphs every folder is described more closely.
 
 ### Functions
 
@@ -20,6 +20,17 @@ The function *wind_rose_diagram* is used to create a wind rose diagram from the 
 
 Every R graphic created is saved in this folder. This shall ease the access to every graphic
 
+### Metadaten
+
+This folder contains meta data of:
+- Messwagen measurements
+- Bernometer measurement values from 20.09.2024 to 15.12.2024 from the stations *"Vordere Länggasse"*, *"Hintere Länggasse"* and *"VonRoll"*
+- Measurements from the MeteoSwiss station at Zollikofen from 11.12.2024 to 13.12.2024.
+
+*Note:*
+Both the MeteoSwiss station at Zollikofen and the Bernometer measurement stations are measured in a ten-minute interval.
+For the MeteoSwiss station at Zollikofen only values between 10:10 and 12:20 o'clock 12.12.2024 were considered for the analysis due to the measurement period.
+
 ### Data
 
 This folder contains every dataset needed to create all R plots. These datasets are the Metadata used for the Bachelor thesis.
@@ -27,7 +38,7 @@ In the following paragraphs, every dataset is described briefly.
 
 #### Bias_CSV
 
-This dataset contains measurement values of the Messwagen and the reference stations *Vordere_Länggasse* (VL), *Hintere_Länggasse* (HL) and *VonRoll* (VR) from the Berner Messnetz. Measurements of both Messwagen and reference stations are performed at three meters above ground at the same moment. In brackets (column: *Messort*) the location (HL, VL, VR) as well as the time is denoted.
+This dataset contains measurement values of the Messwagen and the reference stations *"Vordere_Länggasse"* (VL), *"Hintere_Länggasse"* (HL) and *"VonRoll"* (VR) from the Berner Messnetz. Measurements of both Messwagen and reference stations are performed at three meters above ground at the same moment. In brackets (column: *Messort*) the location (HL, VL, VR) as well as the time is denoted.
 *Note:*
   - T stands for temperature (Temperatur); values in °C
   - LF stands for relative air humidity (Luftfeuchtigkeit), values in %
@@ -87,6 +98,4 @@ This file contains dataset needed and the file to create the height profile in J
 - The file *Height_Profile_Julia* generates the height profile along the long route of temperature and air humidity
 - Inside the folder the images are saved separately as well
 
-### Metadaten
-
-Status: 26.05.2025
+**Status: 26.05.2025**
