@@ -2,7 +2,9 @@
 title: "Dev_between_sensors"
 author: "Flueckiger_Rubens"
 date: "2025-04-01"
-output: html_document
+output: 
+  html_document:
+    toc: true
 ---
 
 # Deviation between Sensors
@@ -14,65 +16,61 @@ Here I took Sensor_3 (3m above ground) as reference Sensor. The choice roots fro
 
 Arya, S. Pal (2001), Introduction to Micrometeorology.Vereinigtes Königreich,Elsevier Science,2001.
 
-## Import packages
+## Import packages and file
 
-```{r}
+```{r, warning=FALSE, message=FALSE}
+#Packages
 library(dplyr)
 library(ggplot2)
-```
 
-## Importing file
-
-```{r}
-lap = read.table("../data/Distanz_&_Hohe_GR_2.csv", sep = ";", header = T)
+#File
+lap <- read.table("../data/Distanz_&_Hohe_GR.csv", sep = ";", header = T)
 ```
 
 ## New dataset
 
 In this step a new dataset *anomaly* gets created. The file consists of:
+
 - Messung: This is the number of measurment
 - Reference sensor: Sensor_1 as reference (all values are = 0)
 - Remaining sensors: sensor - reference sensor
 - Both reference sensor and remaining sensors for temperature as well as for relative air humidity
 - Distanz_Runsum: Distance from measurment start in meters
 
-```{r}
-
+```{r, echo=FALSE}
 #Creating data frame
-Messung = lap$Messung
-anomaly = data.frame(Messung)
+Messung <- lap$Messung
+anomaly <- data.frame(Messung)
 
 #Adding Values for temperature
-anomaly = mutate(anomaly, Sensor1_T = lap$Sensor1_T - lap$Sensor4_T) %>% #Sensor_0.5
+anomaly <- mutate(anomaly, Sensor1_T = lap$Sensor1_T - lap$Sensor4_T) %>% #Sensor_0.5
   mutate(anomaly, Sensor2_T = lap$Sensor2_T - lap$Sensor4_T) %>% #Sensor_1
   mutate(anomaly, Sensor3_T = lap$Sensor3_T - lap$Sensor4_T) %>% #Sensor_2
   mutate(anomaly, Sensor4_T = lap$Sensor4_T - lap$Sensor4_T) #Sensor_3
 
 #Adding Values for relative air humidity
-anomaly = mutate(anomaly, Sensor1_LF = lap$Sensor1_LF - lap$Sensor4_LF) %>% #Sensor_0.5
+anomaly <- mutate(anomaly, Sensor1_LF = lap$Sensor1_LF - lap$Sensor4_LF) %>% #Sensor_0.5
   mutate(anomaly, Sensor2_LF = lap$Sensor2_LF - lap$Sensor4_LF) %>% #Sensor_1
   mutate(anomaly, Sensor3_LF = lap$Sensor3_LF - lap$Sensor4_LF) %>% #Sensor_2
   mutate(anomaly, Sensor4_LF = lap$Sensor4_LF - lap$Sensor4_LF) #Sensor_3
 
 #Adding distance
-anomaly = mutate(anomaly, Distance = lap$Distanz_Runsum)
-
+anomaly <- mutate(anomaly, Distance = lap$Distanz_Runsum)
 ```
 
 ## Plotting
 
 color codes
 
-```{r}
-colors = c("Sensor_0.5" = "red", "Sensor_1" = "orange", "Sensor_2" = "darkgreen", "Sensor_3" = "blue", "Instrumentenfehler" = "lightblue")
+```{r, echo=FALSE}
+colors <- c("Sensor_0.5" = "red", "Sensor_1" = "orange", "Sensor_2" = "darkgreen", "Sensor_3" = "blue", "Instrumentenfehler" = "lightblue")
 ```
 
 Temperature
 
-```{r}
-
+```{r, echo=FALSE}
 #Open jpeg
-jpeg("../Images/Var_between_sensors/temp.jpeg", height = 486, width = 780, res = 108)
+jpeg("../Images/Dev_between_sensors/temp.jpeg", height = 486, width = 780, res = 108)
 
 ggplot(anomaly, aes(x = Distance)) + #x-Axis
   geom_ribbon(aes(ymin = -0.1, ymax = 0.1, fill = "Instrumentenfehler"), alpha = 1) + #Filling
@@ -94,15 +92,13 @@ ggplot(anomaly, aes(x = Distance)) + #x-Axis
 
 #Close and save jpeg
 dev.off()
-
 ```
 
 Relative air humidity
 
-```{r}
-
+```{r, echo=FALSE}
 #Open jpeg
-jpeg("../Images/Var_between_sensors/humidity.jpeg", height = 486, width = 780, res = 108)
+jpeg("../Images/Dev_between_sensors/humidity.jpeg", height = 486, width = 780, res = 108)
 
 ggplot(anomaly, aes(x = Distance)) + #x-Axis
   geom_ribbon(aes(ymin = -1.5, ymax = 1.5, fill = "Instrumentenfehler"), alpha = 1) + #Filling
@@ -124,28 +120,38 @@ ggplot(anomaly, aes(x = Distance)) + #x-Axis
 
 #Close and save jpeg
 dev.off()
-
 ```
 
 ## Statistics
 
-```{r}
-
-statistics = c("Minimum", "Maximum", "Mean")
+```{r, echo=FALSE}
+statistics <- c("Minimum", "Maximum", "Mean")
 
 #Temperature
-Sensor_1 = c(min(anomaly$Sensor1_T), max(anomaly$Sensor1_T), mean(anomaly$Sensor1_T))
-Sensor_2 = c(min(anomaly$Sensor2_T), max(anomaly$Sensor2_T), mean(anomaly$Sensor2_T))
-Sensor_3 = c(min(anomaly$Sensor3_T), max(anomaly$Sensor3_T), mean(anomaly$Sensor3_T))
-
-#Relative air humidity
-Zenzor_1 = c(min(anomaly$Sensor1_LF), max(anomaly$Sensor1_LF), mean(anomaly$Sensor1_LF))
-Zenzor_2 = c(min(anomaly$Sensor2_LF), max(anomaly$Sensor2_LF), mean(anomaly$Sensor2_LF))
-Zenzor_3 = c(min(anomaly$Sensor3_LF), max(anomaly$Sensor3_LF), mean(anomaly$Sensor3_LF))
+Sensor_1 <- c(min(anomaly$Sensor1_T), max(anomaly$Sensor1_T), mean(anomaly$Sensor1_T))
+Sensor_2 <- c(min(anomaly$Sensor2_T), max(anomaly$Sensor2_T), mean(anomaly$Sensor2_T))
+Sensor_3 <- c(min(anomaly$Sensor3_T), max(anomaly$Sensor3_T), mean(anomaly$Sensor3_T))
 
 #Convert to dataframe
-stat_Temp = data.frame(statistics, Sensor_1, Sensor_2,Sensor_3)
-stat_lfk = data.frame(statistics, Zenzor_1, Zenzor_2, Zenzor_3)
+stat_Temp <- data.frame(statistics, Sensor_1, Sensor_2,Sensor_3)
+
+#Display table
+knitr::kable(stat_Temp, caption = "Temperaturstatistik")
+```
+
+
+```{r, echo=FALSE}
+#Relative air humidity
+Zenzor_1 <- c(min(anomaly$Sensor1_LF), max(anomaly$Sensor1_LF), mean(anomaly$Sensor1_LF))
+Zenzor_2 <- c(min(anomaly$Sensor2_LF), max(anomaly$Sensor2_LF), mean(anomaly$Sensor2_LF))
+Zenzor_3 <- c(min(anomaly$Sensor3_LF), max(anomaly$Sensor3_LF), mean(anomaly$Sensor3_LF))
+
+#Convert to dataframe
+stat_lfk <- data.frame(statistics, Zenzor_1, Zenzor_2, Zenzor_3)
+
+#Display table
+knitr::kable(stat_lfk, caption = "Luftfeuchtigkeitsstatistik", 
+             col.names = c("statistics", "Sensor_1", "Sensor_2", "Sensor_3"))
 ```
 
 

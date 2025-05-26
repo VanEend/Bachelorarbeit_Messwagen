@@ -2,41 +2,40 @@
 title: "Pathways"
 author: "Flueckiger_Rubens"
 date: "2025-04-01"
-output: html_document
+output:
+  html_document:
+    toc: true
 ---
 
 # Pathway plots
 
 In this file all pathways for each sensor for temperature and relative air humidity gets plotted
 
-## Import packages
+## Import packages and files
 
-```{r}
+```{r, warning=FALSE, message=FALSE}
+#Packages
 library(ggplot2)
+
+#Files
+lap <-  read.table("../data/Distanz_&_Hohe_GR.csv", sep = ";", header = T)
 ```
 
-## Importing file
-
-```{r}
-lap = read.table("../data/Distanz_&_Hohe_GR_2.csv", sep = ";", header = T)
-```
 
 ## Plots
 
-color codes
-
-```{r}
+```{r, echo=FALSE}
+#Color code
 colors = c("Sensor_0.5" = "red", "Sensor_1" = "darkorange", "Sensor_2" = "darkgreen", "Sensor_3" = "blue")
 ```
 
 Pathways
 
-```{r}
-
+```{r, echo=FALSE}
 #Open jpeg
 jpeg("../Images/Pathways/Pathways.jpeg", height = 486, width = 1200, res = 108)
 
-p1 = ggplot(lap, aes(x = Distanz_Runsum)) + #x-Axis
+p1 <- ggplot(lap, aes(x = Distanz_Runsum)) + #x-Axis
   geom_line(aes(y = Sensor1_LF, color = "Sensor_0.5")) + #Sensor_0.5
   geom_line(aes(y = Sensor2_LF, color = "Sensor_1")) + #Sensor_1
   geom_line(aes(y = Sensor3_LF, color = "Sensor_2")) + #Sensor_2
@@ -53,7 +52,7 @@ p1 = ggplot(lap, aes(x = Distanz_Runsum)) + #x-Axis
   theme(plot.margin = margin(0.2, 0.2, 0.2, -1, "cm")) + #Set Plot margins
   theme(plot.title = element_text(hjust = 0.5)) #Center title
 
-p2 = ggplot(lap, aes(x = Distanz_Runsum)) + #x-Axis
+p2 <- ggplot(lap, aes(x = Distanz_Runsum)) + #x-Axis
   geom_line(aes(y = Sensor1_T, color = "Sensor_0.5")) + #Sensor_0.5
   geom_line(aes(y = Sensor2_T, color = "Sensor_1")) + #Sensor_1
   geom_line(aes(y = Sensor3_T, color = "Sensor_2")) + #Sensor_2
@@ -75,6 +74,4 @@ cowplot::plot_grid(p2, p1, ncol = 2)
 
 #Close and save jpeg
 dev.off()
-
 ```
-

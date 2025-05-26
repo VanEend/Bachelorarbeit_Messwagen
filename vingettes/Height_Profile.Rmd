@@ -2,44 +2,42 @@
 title: "Height_Profile"
 author: "Flueckiger_Rubens"
 date: "2025-04-01"
-output: html_document
+output: 
+  html_document:
+    toc: true
 ---
 
 # Height Profile
 
 This file calculates the height profile along both the short and long route. Differences between the GPS device and the digital elevation model (DEM) are displayed.
 
-## Import packages
+## Import packages and files
 
-
-```{r}
+```{r, message=FALSE, warning=FALSE}
+#Packages
 library(ggplot2)
-```
 
-## Import files
-
-```{r}
-l_lap = read.table("../data/Distanz_&_Hohe_GR_2.csv", sep = ";", header = T)
-s_lap = read.table("../data/Distanz_&_Hohe_KR.csv", sep = ";", header = T)
+#Files
+l_lap <- read.table("../data/Distanz_&_Hohe_GR.csv", sep = ";", header = T)
+s_lap <- read.table("../data/Distanz_&_Hohe_KR.csv", sep = ";", header = T)
 ```
 
 ## Plot
 
-Color code
 
-```{r}
-colors = c("DEM_(Swisstopo)" = "black", "GPS_(Messwagen)" = "red")
+```{r, echo=FALSE}
+#Color code
+colors <- c("DEM_(Swisstopo)" = "black", "GPS_(Messwagen)" = "red")
 ```
 
 Plot
 
-```{r}
-
+```{r, echo=FALSE}
 #Open jpeg
 jpeg("../Images/Height_Profile/Height_Profiles.jpeg", height = 486, width = 1200, res = 108)
 
 #Long Route
-p1 = ggplot(l_lap, aes(x = Distanz_Runsum)) + #x-Axis
+p1 <- ggplot(l_lap, aes(x = Distanz_Runsum)) + #x-Axis
   geom_line(aes(y = Height_GIS1, color = "DEM_(Swisstopo)")) + #DEM Line
   geom_line(aes(y = Height, color = "GPS_(Messwagen)")) + #GPS Line
   labs(y = "Höhe über Meer [m]", x = "Distanz [m]", color = " ") + #Axis Label & Legend
@@ -52,7 +50,7 @@ p1 = ggplot(l_lap, aes(x = Distanz_Runsum)) + #x-Axis
   theme(plot.title = element_text(hjust = 0.5)) #Center title
 
 #Short Route
-p2 = ggplot(s_lap, aes(x = Distanz_Runsum)) + #x-Axis
+p2 <- ggplot(s_lap, aes(x = Distanz_Runsum)) + #x-Axis
   geom_line(aes(y = Height_GIS1, color = "DEM_(Swisstopo)")) + #DEM Line
   geom_line(aes(y = Height, color = "GPS_(Messwagen)")) + #GPS Line
   labs(y = "Höhe über Meer [m]", x = "Distanz [m]", color = " ") + #Axis Label & Legend
@@ -68,5 +66,4 @@ cowplot::plot_grid(p1, p2)
 
 #Close and save jpeg
 dev.off()
-
 ```

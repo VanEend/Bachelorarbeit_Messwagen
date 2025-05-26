@@ -2,32 +2,42 @@
 title: "Reference_Station_Zollikofen"
 author: "Flueckiger_Rubens"
 date: "2025-04-18"
-output: html_document
+output: 
+  html_document:
+    toc: true
 ---
 
 # Statistics of reference station Zollikofen
 
 In this Markdown characteristics of the reference station Bern Zollikofen are displayed
 
-## Importing packages
+## Importing packages, file and function
 
-```{r}
+```{r, warning=FALSE, message=FALSE}
+#Packages
 library(ggplot2)
 library(dplyr)
 library(lubridate)
 library(RColorBrewer)
 library(scales)
+
+#File
+station <- read.table("../data/Messwerte.csv", sep = ";", header = T)
+
+#Function
+source("../Functions/wind_rose_diagram.R")
 ```
 
-## Importing dataset
 
-```{r}
-station = read.table("../data/Messwerte.csv", sep = ";", header = T)
-```
+Source of Code (adjusted version):
+
+Guilherme Araujo Lima da Silva, 2016. Wind rose with ggplot (R)?. Link: https://stackoverflow.com/questions/17266780/wind-rose-with-ggplot-r. Called: 21.04.2025.
+*Note*: Changes were done to rename Axis & Legend
 
 ## The dataset
 
 The dataset contains:
+
 - stn: Station name (3 letter)
 - date: Date of measuring, YYYYMMDD
 - time: Time of measuring, HH:MM
@@ -40,6 +50,7 @@ The dataset contains:
 ## Dataset preparation
 
 In this step following processes are performed:
+
 - remove stn
 - converting date into a date form
 - rename tre200s0 to temp
@@ -49,33 +60,19 @@ In this step following processes are performed:
 - rename dkl010z0 to winddir
 
 ```{r}
-
-station = select(station, -stn)
-station = mutate(station, date = ymd(date))
-station = rename(station, temp = tre200s0)
-station = rename(station, lfk = ure200s0) 
-station = rename(station, sundur = sre000z0)
-station = rename(station, windspeed = fu3010z0)
-station = rename(station, winddir = dkl010z0)
-
-```
-
-## Function for Windrose diagram
-
-Source of Code (adjusted version):
-
-Guilherme Araujo Lima da Silva, 2016. Wind rose with ggplot (R)?. Link: https://stackoverflow.com/questions/17266780/wind-rose-with-ggplot-r. Called: 21.04.2025.
-Note: Changes were done to rename Axis & Legend
-
-```{r}
-
-source("../Functions/wind_rose_diagram.R")
-
+station <- select(station, -stn)
+station <- mutate(station, date = ymd(date))
+station <- rename(station, temp = tre200s0)
+station <- rename(station, lfk = ure200s0) 
+station <- rename(station, sundur = sre000z0)
+station <- rename(station, windspeed = fu3010z0)
+station <- rename(station, winddir = dkl010z0)
 ```
 
 ## Create plots
 
 In this step following plots are created:
+
 - Temperature evolution over time
 - Relative humidity evolution over time
 - Sunshine duration (sum) over 10 minutes
@@ -84,13 +81,12 @@ In this step following plots are created:
 
 Then save it as jpeg
 
-```{r}
-
+```{r, echo=FALSE, warning=FALSE}
 #Open jpeg
 jpeg("../Images/Reference_Station_Zollikofen/Referenzstation.jpeg", height = 1000, width = 1200, res = 108) 
 
 #Temperature
-p_temp = ggplot(data = station, aes(x = time, y = temp, group = F)) + #Add variables
+p_temp <- ggplot(data = station, aes(x = time, y = temp, group = F)) + #Add variables
   geom_line() + geom_point(shape = 16) + #Add points + line
   xlab("Zeit") + ylab("Temperatur [°C]") + ggtitle("Mittlere Temperatur über 10 Minuten") + #Add title + axis label
   annotate(geom = "label", x = 1, y = 0.98, label = "I", family = "serif", size = 6) + #Plot number
@@ -98,7 +94,7 @@ p_temp = ggplot(data = station, aes(x = time, y = temp, group = F)) + #Add varia
   theme(plot.title = element_text(hjust = 0.5)) #Center title
 
 #Relative Humidity
-p_lfk = ggplot(data = station, aes(x = time, y = lfk, group = F)) + #Add variables
+p_lfk <- ggplot(data = station, aes(x = time, y = lfk, group = F)) + #Add variables
   geom_line() + geom_point(shape = 16) + #Add points + line
   xlab("Zeit") + ylab("Luftfeuchtigkeit [%]") + ggtitle("Mittlere Luftfeuchtigkeit über 10 Minuten") + #Add title + axis label
   annotate(geom = "label", x = 13, y = 77.8, label = "II", family = "serif", size = 6) + #Plot number
@@ -106,7 +102,7 @@ p_lfk = ggplot(data = station, aes(x = time, y = lfk, group = F)) + #Add variabl
   theme(plot.title = element_text(hjust = 0.5)) #Center title
 
 #Sun duration
-p_sundur = ggplot(data = station, aes(x = time, y = sundur, group = F)) + #Add variables
+p_sundur <- ggplot(data = station, aes(x = time, y = sundur, group = F)) + #Add variables
   geom_line() + geom_point(shape = 16) + #Add points + line
   xlab("Zeit") + ylab("Sonnenscheindauer [min]") + ggtitle("Sonnenscheindauer in 10 Minuten") + #Add title + axis label
   ylim(0, 10) +
@@ -115,7 +111,7 @@ p_sundur = ggplot(data = station, aes(x = time, y = sundur, group = F)) + #Add v
   theme(plot.title = element_text(hjust = 0.5)) #Center title
 
 #Wind speed
-p_windspeed = ggplot(data = station, aes(x = time, y = windspeed, group = F)) + #Add variables
+p_windspeed <- ggplot(data = station, aes(x = time, y = windspeed, group = F)) + #Add variables
   geom_line() + geom_point(shape = 16) + #Add points + line
   xlab("Zeit") + ylab("Windgeschwindigkeit [km/h]") + ggtitle("Mittlere Windgeschwindigkeit über 10 Minuten") + #Add title + axis label
   annotate(geom = "label", x = 1, y = 4.15, label = "IV", family = "serif", size = 6) + #Plot number
@@ -123,7 +119,7 @@ p_windspeed = ggplot(data = station, aes(x = time, y = windspeed, group = F)) + 
   theme(plot.title = element_text(hjust = 0.5)) #Center title
 
 #Wind direction
-p_winddir = plot.windrose(data = station, spd = station$windspeed, dir = station$winddir, spdmin = 1, spdmax = 5, spdseq = c(1,2,3,4,5), palette = "RdBu") +
+p_winddir <- plot.windrose(data = station, spd = station$windspeed, dir = station$winddir, spdmin = 1, spdmax = 5, spdseq = c(1,2,3,4,5), palette = "RdBu") +
   ggtitle("Windrosendiagramm Zollikofen") +
   theme_bw() +
   theme(plot.title = element_text(hjust = 0.5)) + #Center title
@@ -134,23 +130,24 @@ cowplot::plot_grid(p_temp, p_lfk, p_sundur, p_windspeed, p_winddir, nrow = 3, nc
 
 #Save jpeg
 dev.off()
-
 ```
 
 ## Statistics
 
 Calculating mean, minimum and maximum value of each variable
 
-```{r}
+```{r, echo=FALSE}
+Statistics <- c("Minimum", "Maximum", "Mittelwert")
 
-Statistics = c("Minimum", "Maximum", "Mittelwert")
+Temperatur <- c(min(station$temp), max(station$temp), mean(station$temp))
+Rel_Luftfeuchtigkeit <- c(min(station$lfk), max(station$lfk), mean(station$lfk))
+Sonnenscheindauer <- c(min(station$sundur), max(station$sundur), mean(station$sundur))
+Windgeschwindigkeit <- c(min(station$windspeed), max(station$windspeed), mean(station$windspeed))
 
-#Minimum
-Temperatur = c(min(station$temp), max(station$temp), mean(station$temp))
-Rel_Luftfeuchtigkeit = c(min(station$lfk), max(station$lfk), mean(station$lfk))
-Sonnenscheindauer = c(min(station$sundur), max(station$sundur), mean(station$sundur))
-Windgeschwindigkeit = c(min(station$windspeed), max(station$windspeed), mean(station$windspeed))
+#Create dataframe
+stat_zoll <- data.frame(Statistics, Temperatur, Rel_Luftfeuchtigkeit, Sonnenscheindauer, Windgeschwindigkeit)
 
-stat_zoll = data.frame(Statistics, Temperatur, Rel_Luftfeuchtigkeit, Sonnenscheindauer, Windgeschwindigkeit)
-
+#Create table
+knitr::kable(stat_zoll, capture = "Statistik Messstation Zollikofen",
+             col.names = c("Statistik", "Temperatur", "Rel. Luftfeuchtigkeit", "Sonnenscheindauer", "Windgeschwindikgeit"))
 ```
