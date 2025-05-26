@@ -1,11 +1,11 @@
 ---
-title: "Var_between_sensors"
+title: "Dev_between_sensors"
 author: "Flueckiger_Rubens"
 date: "2025-04-01"
 output: html_document
 ---
 
-# Variance between Sensors
+# Deviation between Sensors
 
 In this file differences between a reference sensor to the others are visualised
 Here I took Sensor_3 (3m above ground) as reference Sensor. The choice roots from measurement conventions for devices at this height. Additionally, Bias-correction was performed at the same height, whereas a cross-validation between all sensors where not performed.
@@ -26,6 +26,7 @@ library(ggplot2)
 ```{r}
 lap = read.table("../data/Distanz_&_Hohe_GR_2.csv", sep = ";", header = T)
 ```
+
 ## New dataset
 
 In this step a new dataset *anomaly* gets created. The file consists of:
