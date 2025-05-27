@@ -1,0 +1,390 @@
+---
+title: "Vertical_Profile"
+author: "Flueckiger_Rubens"
+date: "2025-05-27"
+output: 
+  html_document:
+    toc: true
+---
+
+In this file the vertical profiles of temperature and relative humidity gets calculated
+
+*Note:* If a better visual performance of the graphic is needed, I recommend using the Julia script provided in the folder *Julia*. Dataset needed as well as the saved grafics are provided inside that folder. 
+
+# 1 Import packages, functions and files
+
+```{r, warning=FALSE, message=FALSE}
+#Packages
+library(ggplot2)
+library(reshape2)
+
+#Files
+data <- read.table("../data/Distanz_&_Hohe_GR.csv", sep = ";", header = T)
+
+#Functions
+source("../Functions/cubic_parameters.R")
+```
+
+# 2 Colours
+
+Set colour codes for the plots and the legend 
+
+```{r, echo=FALSE}
+colors = c("Spannweite" = "red", "Mittelwert" = "black", "Stadt" = "grey70", "Wald" = "darkgreen")
+```
+
+# 3 Create new dataset
+
+To improve runtime and visual aesthetics the initial 3894 data points of each sensor along the long route is reduced to 354 data points. This gets accomplished by taking an average over 11 consecutive data points.
+
+```{r, echo=FALSE}
+Messung <- seq(1, 354) #Number of new observations
+
+#New dataframes
+temp <- data.frame(Messung)
+lfk <- data.frame(Messung)
+
+#Mean values over 11 observations
+for(i in 1:354){
+  #Local climate zone
+  lcz <- mean(data[seq(11 * i - 10, i * 11), "LCZ"])
+  if(lcz > 1.5){ #If the value is bigger than 1.5 it is most probably forest
+    lcz <- 2
+  }
+  else{ #If not urban
+    lcz <- 1
+  }
+  
+  #Mean values of temperature
+  temp[i, "Sensor05_T"] <- mean(data[seq(11 * i - 10, i * 11), "Sensor1_T"])
+  temp[i, "Sensor1_T"] <- mean(data[seq(11 * i - 10, i * 11), "Sensor2_T"])
+  temp[i, "Sensor2_T"] <- mean(data[seq(11 * i - 10, i * 11), "Sensor3_T"])
+  temp[i, "Sensor3_T"] <- mean(data[seq(11 * i - 10, i * 11), "Sensor4_T"])
+  temp[i, "LCZ"] <- lcz
+  
+  #Mean values of humidity
+  lfk[i, "Sensor05_LF"] <- mean(data[seq(11 * i - 10, i * 11), "Sensor1_LF"])
+  lfk[i, "Sensor1_LF"] <- mean(data[seq(11 * i - 10, i * 11), "Sensor2_LF"])
+  lfk[i, "Sensor2_LF"] <- mean(data[seq(11 * i - 10, i * 11), "Sensor3_LF"])
+  lfk[i, "Sensor3_LF"] <- mean(data[seq(11 * i - 10, i * 11), "Sensor4_LF"])
+  lfk[i, "LCZ"] <- lcz
+}
+```
+
+# 3 Prepare plot
+
+## 3.1 Cubic parameters
+
+In a first step the function cubic parameters is applied to the temperature and relative air humidity values. Aim of this step is to calculate the cubic parameters a, b, c and d of the general cubic function (see below).
+$$f(x) = ax^3 + bx^2 + cx + d$$
+
+```{r, echo=FALSE}
+#Apply function to temperature values
+vert_temp <- cubic_parameters(half_meter = temp$Sensor05_T,
+                              meter = temp$Sensor1_T,
+                              two_meter = temp$Sensor2_T,
+                              three_meter = temp$Sensor3_T)
+vert_temp["LCZ"] <- temp$LCZ
+
+#Apply function to humidity values
+vert_lfk <- cubic_parameters(half_meter = lfk$Sensor05_LF,
+                             meter = lfk$Sensor1_LF,
+                             two_meter = lfk$Sensor2_LF,
+                             three_meter = lfk$Sensor3_LF)
+vert_lfk["LCZ"] <- lfk$LCZ
+```
+
+Since extreme values over the whole sampling duration is concidered as well, the function *cubic_parameters* is applied over mean, maximum and minimum values for both temperature and humidity.
+
+```{r, echo=FALSE}
+#Max temperature
+vert_t_max <- cubic_parameters(half_meter = max(temp$Sensor05_T),
+                              meter = max(temp$Sensor1_T),
+                              two_meter = max(temp$Sensor2_T),
+                              three_meter = max(temp$Sensor3_T))
+
+#Min temperature
+vert_t_min <- cubic_parameters(half_meter = min(temp$Sensor05_T),
+                              meter = min(temp$Sensor1_T),
+                              two_meter = min(temp$Sensor2_T),
+                              three_meter = min(temp$Sensor3_T))
+
+#Mean temperature
+vert_t_mean <- cubic_parameters(half_meter = mean(temp$Sensor05_T),
+                              meter = mean(temp$Sensor1_T),
+                              two_meter = mean(temp$Sensor2_T),
+                              three_meter = mean(temp$Sensor3_T))
+
+#Store each value into one dataframe
+vert_t_extreme <- rbind(vert_t_max, vert_t_min, vert_t_max)
+
+#Max humidity
+vert_lfk_max <- cubic_parameters(half_meter = max(lfk$Sensor05_LF),
+                              meter = max(lfk$Sensor1_LF),
+                              two_meter = max(lfk$Sensor2_LF),
+                              three_meter = max(lfk$Sensor3_LF))
+
+#Min humidity
+vert_lfk_min <- cubic_parameters(half_meter = min(lfk$Sensor05_LF),
+                              meter = min(lfk$Sensor1_LF),
+                              two_meter = min(lfk$Sensor2_LF),
+                              three_meter = min(lfk$Sensor3_LF))
+
+#Mean humidity
+vert_lfk_mean <- cubic_parameters(half_meter = mean(lfk$Sensor05_LF),
+                              meter = mean(lfk$Sensor1_LF),
+                              two_meter = mean(lfk$Sensor2_LF),
+                              three_meter = mean(lfk$Sensor3_LF))
+
+#Store each value into one dataframe
+vert_lfk_extreme <- rbind(vert_lfk_max, vert_lfk_min, vert_lfk_max)
+```
+
+## 3.2 Curves
+
+After calculating the parameters the curves are created. This step involves creating points in a small interval such that these points can be connected by a line further.
+
+In a first step the quote on quote "normal" points are converted into a curve then the extreme values of both temperature and humidity. The latter is stored inside a seperate dataframe agian such that it can be accessed more easily at the plotting step.
+
+```{r, echo=FALSE}
+#Temperature
+h <- seq(0.5, 3, by = (3 - 0.5)/353)
+plot_t <- data.frame(h) #Dataframe used for plotting
+
+#Create curve of temperature
+for(j in 1:354){
+  plot_t[, j] <- vert_temp[j, "a"] * h^3 + 
+  vert_temp[j, "b"] * h^2 + 
+  vert_temp[j, "c"] * h + 
+  vert_temp[j, "d"]
+}
+
+#Create dataframe for curve extreme values of temperature
+plot_t_extreme <- data.frame(h)
+
+#Create curve of max temperature
+plot_t_extreme[, "max"] <- vert_t_max$a * h^3 +
+  vert_t_max$b * h^2 +
+  vert_t_max$c * h +
+  vert_t_max$d
+
+#Create curve of min temperature
+plot_t_extreme[, "min"] <- vert_t_min$a * h^3 +
+  vert_t_min$b * h^2 +
+  vert_t_min$c * h +
+  vert_t_min$d
+
+#Create curve of mean temperature
+plot_t_extreme[, "mean"] <- vert_t_mean$a * h^3 +
+  vert_t_mean$b * h^2 +
+  vert_t_mean$c * h +
+  vert_t_mean$d
+```
+
+```{r, echo=FALSE}
+#Humidity
+h <- seq(0.5, 3, by = (3 - 0.5)/353)
+plot_lfk <- data.frame(h) #Dataframe used for plotting
+
+#Create curve of temperature
+for(j in 1:354){
+  plot_lfk[, j] <- vert_lfk[j, "a"] * h^3 + 
+  vert_lfk[j, "b"] * h^2 + 
+  vert_lfk[j, "c"] * h + 
+  vert_lfk[j, "d"]
+}
+
+#Create dataframe for curve extreme values of temperature
+plot_lfk_extreme <- data.frame(h)
+
+#Create curve of max temperature
+plot_lfk_extreme[, "max"] <- vert_lfk_max$a * h^3 +
+  vert_lfk_max$b * h^2 +
+  vert_lfk_max$c * h +
+  vert_lfk_max$d
+
+#Create curve of min temperature
+plot_lfk_extreme[, "min"] <- vert_lfk_min$a * h^3 +
+  vert_lfk_min$b * h^2 +
+  vert_lfk_min$c * h +
+  vert_lfk_min$d
+
+#Create curve of mean temperature
+plot_lfk_extreme[, "mean"] <- vert_lfk_mean$a * h^3 +
+  vert_lfk_mean$b * h^2 +
+  vert_lfk_mean$c * h +
+  vert_lfk_mean$d
+```
+
+# 4 Plots
+
+Finally the plots can be created. Hereby we split the process into three steps.
+
+## 4.1 Normal points
+
+In this step the normal points are plotted. With a for loop every data point is plotted into a plot. Inside the plot the program checks if the current data point is located in a urban or a forest environment. If the data point is located in a urban environment, the curve is colered grey, else green.
+
+```{r, echo=FALSE}
+#Plot temperature curves
+p1 <- ggplot(data = plot_t)
+
+#For urban LCZ
+for(k in 2:354){
+  if(temp[k, "LCZ"] == 1){
+      #Sub dataset for plot
+      data_2 <- h
+      data_2 <- data.frame(h)
+      
+      data_2[, "obj"] <- plot_t[, k] #Select current column
+      p1 <- p1 + geom_path(data = data_2, aes(x = obj, y = h, color = "Stadt")) #Plot column
+  }
+}
+
+#For forest LCZ
+for(k in 2:235){
+    if(temp[k, "LCZ"] == 2){
+      #Sub dataset for plot
+      data_2 <- h
+      data_2 <- data.frame(h)
+      
+      data_2[, "obj"] <- plot_t[, k] #Select current column
+      p1 <- p1 + geom_path(data = data_2, aes(x = obj, y = h, color = "Wald")) #Plot column
+  }
+  
+}
+```
+
+```{r, echo=FALSE}
+#Plot humidity curves
+p2 <- ggplot(data = plot_lfk)
+
+#For urban LCZ
+for(k in 2:354){
+  if(lfk[k, "LCZ"] == 1){
+      #Sub dataset for plot
+      data_3 <- h
+      data_3 <- data.frame(h)
+      
+      data_3[, "obj"] <- plot_lfk[, k] #Select current column
+      p2 <- p2 + geom_path(data = data_3, aes(x = obj, y = h, color = "Stadt")) #Plot column
+  }
+}
+
+#For forest LCZ
+for(k in 2:235){
+    if(lfk[k, "LCZ"] == 2){
+      #Sub dataset for plot
+      data_3 <- h
+      data_3 <- data.frame(h)
+      
+      data_3[, "obj"] <- plot_lfk[, k] #Select current column
+      p2 <- p2 + geom_path(data = data_3, aes(x = obj, y = h, color = "Wald")) #Plot column
+  }
+  
+}
+```
+
+## 4.2 Extremes
+
+In a second step, all extreme values are plotted. This includes mean (in black), minimum and maximum (both in red).
+
+```{r, echo=FALSE}
+#Temperature
+p1 <- p1 +
+  #Plot extreme values of temperature
+  geom_path(data = plot_t_extreme, aes(x = min, y = h, color = "Spannweite")) + #Min
+  geom_path(data = plot_t_extreme, aes(x = max, y = h), color = "red") + #Max
+  geom_path(data = plot_t_extreme, aes(x = mean, y = h, color = "Mittelwert")) #Mean
+
+#Humidity
+p2 <- p2 +
+  #Plot extreme values of temperature
+  geom_path(data = plot_lfk_extreme, aes(x = min, y = h, color = "Spannweite")) + #Min
+  geom_path(data = plot_lfk_extreme, aes(x = max, y = h), color = "red") + #Max
+  geom_path(data = plot_lfk_extreme, aes(x = mean, y = h, color = "Mittelwert")) #Mean
+```
+
+## 4.3 Aesthetics and Save
+
+In a final step, the plots are visually adjusted. This includes:
+
+- Adding Axis label
+- Adding title
+- Adding Legend
+
+Finally the plots are saved inside the *Images* folder
+
+```{r, echo=FALSE}
+#Make plot adjustment
+p1 <- p1 +
+  labs(y = "Höhe über Boden [m]", #Y-Axis label
+       x = "Temperatur [°C]", #X-Axis label
+       title = "Vertikales Temperaturprofil") + #Title
+  scale_colour_manual(name = "Legende", values = colors) + #Legend
+  theme_bw() + #Change plot motive
+  theme(plot.title = element_text(hjust = 0.5)) #Center title
+
+#Open jpeg
+jpeg("../Images/Vert_height_profile/temp.jpeg", height = 486, width = 780, res = 108)
+
+p1
+
+
+#Close and save jpeg
+dev.off()
+```
+
+```{r, echo=FALSE}
+#Make plot adjustment
+p2 <- p2 +
+  #Plot extreme values of temperature
+  geom_path(data = plot_lfk_extreme, aes(x = min, y = h, color = "Spannweite")) + #Min
+  geom_path(data = plot_lfk_extreme, aes(x = max, y = h), color = "red") + #Max
+  geom_path(data = plot_lfk_extreme, aes(x = mean, y = h, color = "Mittelwert")) + #Mean
+  
+  labs(y = "Höhe über Boden [m]", #Y-Axis label
+       x = "Luftfeuchtigkeit [%]", #X-Axis label
+       title = "Vertikales Profil der relativen Luftfeuchtigkeit") + #Title
+  scale_colour_manual(name = "Legende", values = colors) + #Legend
+  theme_bw() + #Change plot motive
+  theme(plot.title = element_text(hjust = 0.5)) #Center title
+
+
+#Open jpeg
+jpeg("../Images/Vert_height_profile/humidity.jpeg", height = 486, width = 780, res = 108)
+
+p2
+
+
+#Close and save jpeg
+dev.off()
+```
+
+# 5 Statistics
+
+In this step, a, b, c and d values of both temperature and humidity are displayed.
+
+```{r, echo=FALSE}
+#Temperature
+mean_t <- data.frame(1)
+mean_t["Grösse"] <- c("Temperatur")
+mean_t["a"] <- vert_t_mean$a
+mean_t["b"] <- vert_t_mean$b
+mean_t["c"] <- vert_t_mean$c
+mean_t["d"] <- vert_t_mean$d
+
+#Humidity
+mean_lfk <- data.frame(1)
+mean_lfk["Grösse"] <- c("Luftfeuchtigkeit")
+mean_lfk["a"] <- vert_lfk_mean$a
+mean_lfk["b"] <- vert_lfk_mean$b
+mean_lfk["c"] <- vert_lfk_mean$c
+mean_lfk["d"] <- vert_lfk_mean$d
+
+#Combine and display
+mean_stat <- rbind(mean_t, mean_lfk)
+mean_stat <- dplyr::select(mean_stat, -X1)
+
+knitr::kable(mean_stat, caption = "Kubische Parameter der mittleren Temperaturveränderung")
+```
+
