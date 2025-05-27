@@ -358,18 +358,16 @@ display: none;
 
 <div id="TOC">
 <ul>
-<li><a href="#deviation-between-sensors" id="toc-deviation-between-sensors">Deviation between Sensors</a>
-<ul>
-<li><a href="#import-packages-and-file" id="toc-import-packages-and-file">Import packages and file</a></li>
-<li><a href="#new-dataset" id="toc-new-dataset">New dataset</a></li>
-<li><a href="#plotting" id="toc-plotting">Plotting</a></li>
-<li><a href="#statistics" id="toc-statistics">Statistics</a></li>
-</ul></li>
+<li><a href="#deviation-between-sensors" id="toc-deviation-between-sensors">1 Deviation between Sensors</a></li>
+<li><a href="#import-packages-and-file" id="toc-import-packages-and-file">2 Import packages and file</a></li>
+<li><a href="#new-dataset" id="toc-new-dataset">3 New dataset</a></li>
+<li><a href="#plotting" id="toc-plotting">4 Plotting</a></li>
+<li><a href="#statistics" id="toc-statistics">4 Statistics</a></li>
 </ul>
 </div>
 
 <div id="deviation-between-sensors" class="section level1">
-<h1>Deviation between Sensors</h1>
+<h1>1 Deviation between Sensors</h1>
 <p>In this file differences between a reference sensor to the others are
 visualised Here I took Sensor_3 (3m above ground) as reference Sensor.
 The choice roots from measurement conventions for devices at this
@@ -382,8 +380,9 @@ our case: 3m * 0.0036K/m = 0.0108K decrease) and high degree differences
 (might) only occur due to device inaccuracy/bias.</p>
 <p>Arya, S. Pal (2001), Introduction to Micrometeorology.Vereinigtes
 Königreich,Elsevier Science,2001.</p>
-<div id="import-packages-and-file" class="section level2">
-<h2>Import packages and file</h2>
+</div>
+<div id="import-packages-and-file" class="section level1">
+<h1>2 Import packages and file</h1>
 <pre class="r"><code>#Packages
 library(dplyr)
 library(ggplot2)
@@ -391,8 +390,8 @@ library(ggplot2)
 #File
 lap &lt;- read.table(&quot;../data/Distanz_&amp;_Hohe_GR.csv&quot;, sep = &quot;;&quot;, header = T)</code></pre>
 </div>
-<div id="new-dataset" class="section level2">
-<h2>New dataset</h2>
+<div id="new-dataset" class="section level1">
+<h1>3 New dataset</h1>
 <p>In this step a new dataset <em>anomaly</em> gets created. The file
 consists of:</p>
 <ul>
@@ -404,8 +403,8 @@ as for relative air humidity</li>
 <li>Distanz_Runsum: Distance from measurment start in meters</li>
 </ul>
 </div>
-<div id="plotting" class="section level2">
-<h2>Plotting</h2>
+<div id="plotting" class="section level1">
+<h1>4 Plotting</h1>
 <p>color codes</p>
 <p>Temperature</p>
 <pre><code>## png 
@@ -414,8 +413,8 @@ as for relative air humidity</li>
 <pre><code>## png 
 ##   2</code></pre>
 </div>
-<div id="statistics" class="section level2">
-<h2>Statistics</h2>
+<div id="statistics" class="section level1">
+<h1>4 Statistics</h1>
 <table>
 <caption>Temperaturstatistik</caption>
 <thead>
@@ -478,7 +477,6 @@ as for relative air humidity</li>
 </tr>
 </tbody>
 </table>
-</div>
 </div>
 
 

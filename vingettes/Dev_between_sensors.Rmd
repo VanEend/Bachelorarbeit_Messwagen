@@ -7,16 +7,15 @@ output:
     toc: true
 ---
 
-# Deviation between Sensors
+# 1 Deviation between Sensors
 
-In this file differences between a reference sensor to the others are visualised
-Here I took Sensor_3 (3m above ground) as reference Sensor. The choice roots from measurement conventions for devices at this height. Additionally, Bias-correction was performed at the same height, whereas a cross-validation between all sensors where not performed.
+In this file differences between a reference sensor to the others are visualised Here I took Sensor_3 (3m above ground) as reference Sensor. The choice roots from measurement conventions for devices at this height. Additionally, Bias-correction was performed at the same height, whereas a cross-validation between all sensors where not performed.
 
-*Note:* Due to the moist adiabatic lapse rate being at Ts = 0.0069K/m (for T = 273.2K or 0°C) and Ts = 0.0036K/m (for T = 303K or 29.8°C) [Pal, 2001, P.68], the decrease in Temperature is negligible (in our case: 3m * 0.0036K/m = 0.0108K decrease) and high degree differences (might) only occur due to device inaccuracy/bias.
+*Note:* Due to the moist adiabatic lapse rate being at Ts = 0.0069K/m (for T = 273.2K or 0°C) and Ts = 0.0036K/m (for T = 303K or 29.8°C) [Pal, 2001, P.68], the decrease in Temperature is negligible (in our case: 3m \* 0.0036K/m = 0.0108K decrease) and high degree differences (might) only occur due to device inaccuracy/bias.
 
 Arya, S. Pal (2001), Introduction to Micrometeorology.Vereinigtes Königreich,Elsevier Science,2001.
 
-## Import packages and file
+# 2 Import packages and file
 
 ```{r, warning=FALSE, message=FALSE}
 #Packages
@@ -27,15 +26,15 @@ library(ggplot2)
 lap <- read.table("../data/Distanz_&_Hohe_GR.csv", sep = ";", header = T)
 ```
 
-## New dataset
+# 3 New dataset
 
 In this step a new dataset *anomaly* gets created. The file consists of:
 
-- Messung: This is the number of measurment
-- Reference sensor: Sensor_1 as reference (all values are = 0)
-- Remaining sensors: sensor - reference sensor
-- Both reference sensor and remaining sensors for temperature as well as for relative air humidity
-- Distanz_Runsum: Distance from measurment start in meters
+-   Messung: This is the number of measurment
+-   Reference sensor: Sensor_1 as reference (all values are = 0)
+-   Remaining sensors: sensor - reference sensor
+-   Both reference sensor and remaining sensors for temperature as well as for relative air humidity
+-   Distanz_Runsum: Distance from measurment start in meters
 
 ```{r, echo=FALSE}
 #Creating data frame
@@ -58,7 +57,7 @@ anomaly <- mutate(anomaly, Sensor1_LF = lap$Sensor1_LF - lap$Sensor4_LF) %>% #Se
 anomaly <- mutate(anomaly, Distance = lap$Distanz_Runsum)
 ```
 
-## Plotting
+# 4 Plotting
 
 color codes
 
@@ -122,7 +121,7 @@ ggplot(anomaly, aes(x = Distance)) + #x-Axis
 dev.off()
 ```
 
-## Statistics
+# 4 Statistics
 
 ```{r, echo=FALSE}
 statistics <- c("Minimum", "Maximum", "Mean")
@@ -139,7 +138,6 @@ stat_Temp <- data.frame(statistics, Sensor_1, Sensor_2,Sensor_3)
 knitr::kable(stat_Temp, caption = "Temperaturstatistik")
 ```
 
-
 ```{r, echo=FALSE}
 #Relative air humidity
 Zenzor_1 <- c(min(anomaly$Sensor1_LF), max(anomaly$Sensor1_LF), mean(anomaly$Sensor1_LF))
@@ -153,5 +151,3 @@ stat_lfk <- data.frame(statistics, Zenzor_1, Zenzor_2, Zenzor_3)
 knitr::kable(stat_lfk, caption = "Luftfeuchtigkeitsstatistik", 
              col.names = c("statistics", "Sensor_1", "Sensor_2", "Sensor_3"))
 ```
-
-

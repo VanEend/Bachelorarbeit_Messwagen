@@ -358,30 +358,24 @@ display: none;
 
 <div id="TOC">
 <ul>
-<li><a href="#bias-correction" id="toc-bias-correction">Bias
-Correction</a>
-<ul>
-<li><a href="#import-packages-and-file" id="toc-import-packages-and-file">Import packages and file</a></li>
-<li><a href="#errorvalues" id="toc-errorvalues">Errorvalues</a></li>
-<li><a href="#plots" id="toc-plots">Plots</a></li>
-</ul></li>
+<li><a href="#import-packages-and-file" id="toc-import-packages-and-file">1 Import packages and file</a></li>
+<li><a href="#errorvalues" id="toc-errorvalues">2 Errorvalues</a></li>
+<li><a href="#plots" id="toc-plots">3 Plots</a></li>
 </ul>
 </div>
 
-<div id="bias-correction" class="section level1">
-<h1>Bias Correction</h1>
 <p>This file plots the measured values of the sensor_3 vs. the permanent
 measurement devices of the Bernometer</p>
-<div id="import-packages-and-file" class="section level2">
-<h2>Import packages and file</h2>
+<div id="import-packages-and-file" class="section level1">
+<h1>1 Import packages and file</h1>
 <pre class="r"><code>#Package
 library(ggplot2)
 
 #File
 data &lt;- readr::read_csv2(&quot;../data/Bias_CSV.csv&quot;)</code></pre>
 </div>
-<div id="errorvalues" class="section level2">
-<h2>Errorvalues</h2>
+<div id="errorvalues" class="section level1">
+<h1>2 Errorvalues</h1>
 <p>Following errorvalues are given:</p>
 <p><em>Messwagen</em></p>
 <ul>
@@ -394,12 +388,11 @@ data &lt;- readr::read_csv2(&quot;../data/Bias_CSV.csv&quot;)</code></pre>
 <li>Relative air humidity [%]: 1.8</li>
 </ul>
 </div>
-<div id="plots" class="section level2">
-<h2>Plots</h2>
+<div id="plots" class="section level1">
+<h1>3 Plots</h1>
 <p>Plotting temperature values</p>
 <pre><code>## png 
 ##   2</code></pre>
-</div>
 </div>
 
 

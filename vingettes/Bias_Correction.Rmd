@@ -7,11 +7,9 @@ output:
     toc: true
 ---
 
-# Bias Correction
-
 This file plots the measured values of the sensor_3 vs. the permanent measurement devices of the Bernometer
 
-## Import packages and file
+# 1 Import packages and file
 
 ```{r, warning=FALSE, message=FALSE}
 #Package
@@ -21,19 +19,19 @@ library(ggplot2)
 data <- readr::read_csv2("../data/Bias_CSV.csv")
 ```
 
-## Errorvalues
+# 2 Errorvalues
 
 Following errorvalues are given:
 
 *Messwagen*
 
-- Temperature [°C]: 0.1
-- Relative air huimidty [%]: 1.5
+-   Temperature [°C]: 0.1
+-   Relative air huimidty [%]: 1.5
 
-*Bernometer* 
+*Bernometer*
 
-- Temperature [°C]: 0.2
-- Relative air humidity [%]: 1.8
+-   Temperature [°C]: 0.2
+-   Relative air humidity [%]: 1.8
 
 ```{r, echo=FALSE}
 # Messwagen
@@ -47,7 +45,7 @@ eSt <- 0.2
 eSlfk <- 1.8
 ```
 
-## Plots
+# 3 Plots
 
 ```{r, echo=FALSE}
 colors <- c("Messwagen" = "red", "Referenzstation" = "deepskyblue4")

@@ -7,11 +7,9 @@ output:
     toc: true
 ---
 
-# Statistics
-
 This file plots statistics of all 4 sensors
 
-## Import packages and files
+# 1 Import packages and files
 
 ```{r, message=FALSE, warning=FALSE}
 #Packages
@@ -22,12 +20,12 @@ s_lap <- read.table("../data/Distanz_&_Hohe_KR.csv", sep = ";", header = T)
 l_lap <- read.table("../data/Distanz_&_Hohe_GR.csv", sep = ";", header = T)
 ```
 
-## Information about sensors
+# 2 Information about sensors
 
-1. 0.5m above ground, colour = red
-2. 1m above ground, colour = blue
-3. 2m above ground, colour = green
-4. 3m above ground, colour = orange
+1.  0.5m above ground, colour = red
+2.  1m above ground, colour = blue
+3.  2m above ground, colour = green
+4.  3m above ground, colour = orange
 
 ```{r, echo=FALSE}
 Sensor <- c(1, 2, 3, 4)
@@ -40,16 +38,16 @@ knitr::kable(Info_Sensors, capture = "Information über Messstationen",
              col.names = c("Sensor", "Höhe", "Farbe"))
 ```
 
-## Statistics about each sensor
+# 3 Statistics about each sensor
 
 Mean quadratic deviation from sensor_1
 
 To solve this problem, first a new dataset *anomaly* gets created. It contains:
 
-- Messung: This is the number of measurment
-- Reference sensor: Sensor_3 as reference (all values are = 0)
-- Remaining sensors: (sensor - reference sensor)$^2$
-- Both reference sensor and remaining sensors for temperature as well as for relative air humidity
+-   Messung: This is the number of measurment
+-   Reference sensor: Sensor_3 as reference (all values are = 0)
+-   Remaining sensors: (sensor - reference sensor)$^2$
+-   Both reference sensor and remaining sensors for temperature as well as for relative air humidity
 
 ```{r, echo=FALSE}
 #Creating data frame
@@ -69,7 +67,7 @@ anomaly <- mutate(anomaly, Sensor1_LF = (l_lap$Sensor1_LF - l_lap$Sensor4_LF)^2)
   mutate(anomaly, Sensor4_LF = (l_lap$Sensor4_LF - l_lap$Sensor4_LF)^2) #Sensor_3
 ```
 
-Calculating mean, minimum and maximum value of each sensor 
+Calculating mean, minimum and maximum value of each sensor
 
 Temperature
 
@@ -84,7 +82,7 @@ Sensor_4t <- c(min(l_lap$Sensor4_T), max(l_lap$Sensor4_T), mean(l_lap$Sensor4_T)
 stat_T <- data.frame(Statistics, Sensor_1t, Sensor_2t, Sensor_3t, Sensor_4t)
 
 #Create table
-knitr::kable(stat_T, capture = "Statistik Temperatur",
+knitr::kable(stat_T, caption = "Statistik Temperatur",
              col.names = c("Statistik", "Sensor 1", "Sensor 2", "Sensor 3", "Sensor 4"))
 ```
 
@@ -100,6 +98,6 @@ Sensor_4lfk <- c(min(l_lap$Sensor4_LF), max(l_lap$Sensor4_LF), mean(l_lap$Sensor
 stat_LFK <- data.frame(Statistics,Sensor_1lfk,Sensor_2lfk,Sensor_3lfk,Sensor_4lfk)
 
 #Create table
-knitr::kable(stat_LFK, capture = "Statistik Temperatur",
+knitr::kable(stat_LFK, caption = "Statistik Temperatur",
              col.names = c("Statistik", "Sensor 1", "Sensor 2", "Sensor 3", "Sensor 4"))
 ```

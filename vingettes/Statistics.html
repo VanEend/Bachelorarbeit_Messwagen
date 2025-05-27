@@ -358,21 +358,16 @@ display: none;
 
 <div id="TOC">
 <ul>
-<li><a href="#statistics" id="toc-statistics">Statistics</a>
-<ul>
-<li><a href="#import-packages-and-files" id="toc-import-packages-and-files">Import packages and files</a></li>
-<li><a href="#information-about-sensors" id="toc-information-about-sensors">Information about sensors</a></li>
-<li><a href="#statistics-about-each-sensor" id="toc-statistics-about-each-sensor">Statistics about each
+<li><a href="#import-packages-and-files" id="toc-import-packages-and-files">1 Import packages and files</a></li>
+<li><a href="#information-about-sensors" id="toc-information-about-sensors">2 Information about sensors</a></li>
+<li><a href="#statistics-about-each-sensor" id="toc-statistics-about-each-sensor">3 Statistics about each
 sensor</a></li>
-</ul></li>
 </ul>
 </div>
 
-<div id="statistics" class="section level1">
-<h1>Statistics</h1>
 <p>This file plots statistics of all 4 sensors</p>
-<div id="import-packages-and-files" class="section level2">
-<h2>Import packages and files</h2>
+<div id="import-packages-and-files" class="section level1">
+<h1>1 Import packages and files</h1>
 <pre class="r"><code>#Packages
 library(dplyr)
 
@@ -380,8 +375,8 @@ library(dplyr)
 s_lap &lt;- read.table(&quot;../data/Distanz_&amp;_Hohe_KR.csv&quot;, sep = &quot;;&quot;, header = T)
 l_lap &lt;- read.table(&quot;../data/Distanz_&amp;_Hohe_GR.csv&quot;, sep = &quot;;&quot;, header = T)</code></pre>
 </div>
-<div id="information-about-sensors" class="section level2">
-<h2>Information about sensors</h2>
+<div id="information-about-sensors" class="section level1">
+<h1>2 Information about sensors</h1>
 <ol style="list-style-type: decimal">
 <li>0.5m above ground, colour = red</li>
 <li>1m above ground, colour = blue</li>
@@ -420,8 +415,8 @@ l_lap &lt;- read.table(&quot;../data/Distanz_&amp;_Hohe_GR.csv&quot;, sep = &quo
 </tbody>
 </table>
 </div>
-<div id="statistics-about-each-sensor" class="section level2">
-<h2>Statistics about each sensor</h2>
+<div id="statistics-about-each-sensor" class="section level1">
+<h1>3 Statistics about each sensor</h1>
 <p>Mean quadratic deviation from sensor_1</p>
 <p>To solve this problem, first a new dataset <em>anomaly</em> gets
 created. It contains:</p>
@@ -435,6 +430,7 @@ as for relative air humidity</li>
 <p>Calculating mean, minimum and maximum value of each sensor</p>
 <p>Temperature</p>
 <table>
+<caption>Statistik Temperatur</caption>
 <thead>
 <tr class="header">
 <th align="left">Statistik</th>
@@ -477,6 +473,7 @@ as for relative air humidity</li>
 </table>
 <p>Relative air humidity</p>
 <table>
+<caption>Statistik Temperatur</caption>
 <thead>
 <tr class="header">
 <th align="left">Statistik</th>
@@ -517,7 +514,6 @@ as for relative air humidity</li>
 </tr>
 </tbody>
 </table>
-</div>
 </div>
 
 

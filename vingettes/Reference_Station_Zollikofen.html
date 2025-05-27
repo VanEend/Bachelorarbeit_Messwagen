@@ -358,26 +358,21 @@ display: none;
 
 <div id="TOC">
 <ul>
-<li><a href="#statistics-of-reference-station-zollikofen" id="toc-statistics-of-reference-station-zollikofen">Statistics of
-reference station Zollikofen</a>
-<ul>
-<li><a href="#importing-packages-file-and-function" id="toc-importing-packages-file-and-function">Importing packages, file
+<li><a href="#importing-packages-file-and-function" id="toc-importing-packages-file-and-function">1 Importing packages, file
 and function</a></li>
-<li><a href="#the-dataset" id="toc-the-dataset">The dataset</a></li>
-<li><a href="#dataset-preparation" id="toc-dataset-preparation">Dataset
-preparation</a></li>
-<li><a href="#create-plots" id="toc-create-plots">Create plots</a></li>
-<li><a href="#statistics" id="toc-statistics">Statistics</a></li>
-</ul></li>
+<li><a href="#the-dataset" id="toc-the-dataset">2 The dataset</a></li>
+<li><a href="#dataset-preparation" id="toc-dataset-preparation">3
+Dataset preparation</a></li>
+<li><a href="#create-plots" id="toc-create-plots">3 Create
+plots</a></li>
+<li><a href="#statistics" id="toc-statistics">5 Statistics</a></li>
 </ul>
 </div>
 
-<div id="statistics-of-reference-station-zollikofen" class="section level1">
-<h1>Statistics of reference station Zollikofen</h1>
 <p>In this Markdown characteristics of the reference station Bern
 Zollikofen are displayed</p>
-<div id="importing-packages-file-and-function" class="section level2">
-<h2>Importing packages, file and function</h2>
+<div id="importing-packages-file-and-function" class="section level1">
+<h1>1 Importing packages, file and function</h1>
 <pre class="r"><code>#Packages
 library(ggplot2)
 library(dplyr)
@@ -396,8 +391,8 @@ Link: <a href="https://stackoverflow.com/questions/17266780/wind-rose-with-ggplo
 Called: 21.04.2025. <em>Note</em>: Changes were done to rename Axis
 &amp; Legend</p>
 </div>
-<div id="the-dataset" class="section level2">
-<h2>The dataset</h2>
+<div id="the-dataset" class="section level1">
+<h1>2 The dataset</h1>
 <p>The dataset contains:</p>
 <ul>
 <li>stn: Station name (3 letter)</li>
@@ -410,8 +405,8 @@ Called: 21.04.2025. <em>Note</em>: Changes were done to rename Axis
 <li>dkl010z0: Wind direction, mean over 10min [°]</li>
 </ul>
 </div>
-<div id="dataset-preparation" class="section level2">
-<h2>Dataset preparation</h2>
+<div id="dataset-preparation" class="section level1">
+<h1>3 Dataset preparation</h1>
 <p>In this step following processes are performed:</p>
 <ul>
 <li>remove stn</li>
@@ -430,8 +425,8 @@ station &lt;- rename(station, sundur = sre000z0)
 station &lt;- rename(station, windspeed = fu3010z0)
 station &lt;- rename(station, winddir = dkl010z0)</code></pre>
 </div>
-<div id="create-plots" class="section level2">
-<h2>Create plots</h2>
+<div id="create-plots" class="section level1">
+<h1>3 Create plots</h1>
 <p>In this step following plots are created:</p>
 <ul>
 <li>Temperature evolution over time</li>
@@ -444,10 +439,11 @@ station &lt;- rename(station, winddir = dkl010z0)</code></pre>
 <pre><code>## png 
 ##   2</code></pre>
 </div>
-<div id="statistics" class="section level2">
-<h2>Statistics</h2>
+<div id="statistics" class="section level1">
+<h1>5 Statistics</h1>
 <p>Calculating mean, minimum and maximum value of each variable</p>
 <table>
+<caption>Statistik Messstation Zollikofen</caption>
 <colgroup>
 <col width="13%" />
 <col width="13%" />
@@ -488,7 +484,6 @@ station &lt;- rename(station, winddir = dkl010z0)</code></pre>
 </tr>
 </tbody>
 </table>
-</div>
 </div>
 
 

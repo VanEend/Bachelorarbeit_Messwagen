@@ -7,11 +7,9 @@ output:
     toc: true
 ---
 
-# Statistics of reference station Zollikofen
-
 In this Markdown characteristics of the reference station Bern Zollikofen are displayed
 
-## Importing packages, file and function
+# 1 Importing packages, file and function
 
 ```{r, warning=FALSE, message=FALSE}
 #Packages
@@ -28,36 +26,34 @@ station <- read.table("../data/Messwerte.csv", sep = ";", header = T)
 source("../Functions/wind_rose_diagram.R")
 ```
 
-
 Source of Code (adjusted version):
 
-Guilherme Araujo Lima da Silva, 2016. Wind rose with ggplot (R)?. Link: https://stackoverflow.com/questions/17266780/wind-rose-with-ggplot-r. Called: 21.04.2025.
-*Note*: Changes were done to rename Axis & Legend
+Guilherme Araujo Lima da Silva, 2016. Wind rose with ggplot (R)?. Link: <https://stackoverflow.com/questions/17266780/wind-rose-with-ggplot-r>. Called: 21.04.2025. *Note*: Changes were done to rename Axis & Legend
 
-## The dataset
+# 2 The dataset
 
 The dataset contains:
 
-- stn: Station name (3 letter)
-- date: Date of measuring, YYYYMMDD
-- time: Time of measuring, HH:MM
-- tre200s0: Air temperature 2m above ground [°C]
-- ure200s0: Relative air humidity 2m above ground [%]
-- sre200z0: Sunshine duration, 10min sum [min]
-- fu3010z0: Wind speed, mean over 10min [km/h]
-- dkl010z0: Wind direction, mean over 10min [°]
+-   stn: Station name (3 letter)
+-   date: Date of measuring, YYYYMMDD
+-   time: Time of measuring, HH:MM
+-   tre200s0: Air temperature 2m above ground [°C]
+-   ure200s0: Relative air humidity 2m above ground [%]
+-   sre200z0: Sunshine duration, 10min sum [min]
+-   fu3010z0: Wind speed, mean over 10min [km/h]
+-   dkl010z0: Wind direction, mean over 10min [°]
 
-## Dataset preparation
+# 3 Dataset preparation
 
 In this step following processes are performed:
 
-- remove stn
-- converting date into a date form
-- rename tre200s0 to temp
-- rename ure200s0 to lfk
-- rename sre000z0 to sundur
-- rename fu3010z0 to windspeed
-- rename dkl010z0 to winddir
+-   remove stn
+-   converting date into a date form
+-   rename tre200s0 to temp
+-   rename ure200s0 to lfk
+-   rename sre000z0 to sundur
+-   rename fu3010z0 to windspeed
+-   rename dkl010z0 to winddir
 
 ```{r}
 station <- select(station, -stn)
@@ -69,15 +65,15 @@ station <- rename(station, windspeed = fu3010z0)
 station <- rename(station, winddir = dkl010z0)
 ```
 
-## Create plots
+# 3 Create plots
 
 In this step following plots are created:
 
-- Temperature evolution over time
-- Relative humidity evolution over time
-- Sunshine duration (sum) over 10 minutes
-- Windspeed (mean) over 10 min
-- winddirection (mean) over 10 min
+-   Temperature evolution over time
+-   Relative humidity evolution over time
+-   Sunshine duration (sum) over 10 minutes
+-   Windspeed (mean) over 10 min
+-   winddirection (mean) over 10 min
 
 Then save it as jpeg
 
@@ -132,7 +128,7 @@ cowplot::plot_grid(p_temp, p_lfk, p_sundur, p_windspeed, p_winddir, nrow = 3, nc
 dev.off()
 ```
 
-## Statistics
+# 5 Statistics
 
 Calculating mean, minimum and maximum value of each variable
 
@@ -148,6 +144,6 @@ Windgeschwindigkeit <- c(min(station$windspeed), max(station$windspeed), mean(st
 stat_zoll <- data.frame(Statistics, Temperatur, Rel_Luftfeuchtigkeit, Sonnenscheindauer, Windgeschwindigkeit)
 
 #Create table
-knitr::kable(stat_zoll, capture = "Statistik Messstation Zollikofen",
+knitr::kable(stat_zoll, caption = "Statistik Messstation Zollikofen",
              col.names = c("Statistik", "Temperatur", "Rel. Luftfeuchtigkeit", "Sonnenscheindauer", "Windgeschwindikgeit"))
 ```

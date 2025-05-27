@@ -7,11 +7,9 @@ output:
     toc: true
 ---
 
-# Pathway plots
-
 In this file all pathways for each sensor for temperature and relative air humidity gets plotted
 
-## Import packages and files
+# 1 Import packages and files
 
 ```{r, warning=FALSE, message=FALSE}
 #Packages
@@ -21,12 +19,11 @@ library(ggplot2)
 lap <-  read.table("../data/Distanz_&_Hohe_GR.csv", sep = ";", header = T)
 ```
 
-
-## Plots
+# 2 Plots
 
 ```{r, echo=FALSE}
 #Color code
-colors = c("Sensor_0.5" = "red", "Sensor_1" = "darkorange", "Sensor_2" = "darkgreen", "Sensor_3" = "blue")
+colors <- c("Sensor_0.5" = "red", "Sensor_1" = "darkorange", "Sensor_2" = "darkgreen", "Sensor_3" = "blue")
 ```
 
 Pathways
