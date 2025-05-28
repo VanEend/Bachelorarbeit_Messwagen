@@ -101,5 +101,6 @@ This file contains following R Markdown files:
 - Reference_Station_Zollikofen; used to create graphs to visualise climatic conditions during measurement period at the reference station Zollikofen from MeteoSwiss
 - Statistics; used to determine statistics of the long route
 - Vertical_Profile; Creates a vertical profile of temperature and humidity along the long route. This file is a R-based version of the Julia file inside the *Julia* folder. I recommend using the Julia version due to worse graphic performance on this R-based version.
+- In addition for every file a html file is provided to have a brief overview of the result
 
 **Status: 28.05.2025**
