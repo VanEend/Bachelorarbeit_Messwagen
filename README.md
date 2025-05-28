@@ -20,6 +20,16 @@ The function *wind_rose_diagram* is used to create a wind rose diagram from the 
 
 Every R graphic created is saved in this folder. This shall ease the access to every graphic
 
+### Julia
+
+This file contains dataset needed and the file to create the height profile in Julia.
+- The dataset *Distanz_&_Hohe_GR_2* contains the same information as the dataset *Distanz_&_Hohe_GR*
+- The file *Height_Profile_Julia* generates the height profile along the long route of temperature and air humidity
+- Inside the folder the images are saved separately as well
+- The file *install_packages* installs all necessary packages into Julia if they are not installed already
+
+*Note:* Inside the folder *vingettes* an additonal R-based version of this folder was created. However, Julia performs better for dataset with many datapoints which results in a better graphic quality if executed on Julia.
+
 ### Metadaten
 
 This folder contains meta data of:
@@ -90,12 +100,5 @@ This file contains following R Markdown files:
 - Pathways; used to create a temperature and relative air humidity pathway along the long route
 - Reference_Station_Zollikofen; used to create graphs to visualise climatic conditions during measurement period at the reference station Zollikofen from MeteoSwiss
 - Statistics; used to determine statistics of the long route
-
-### vingettes_julia
-
-This file contains dataset needed and the file to create the height profile in Julia.
-- The dataset *Distanz_&_Hohe_GR_2* contains the same information as the dataset *Distanz_&_Hohe_GR*
-- The file *Height_Profile_Julia* generates the height profile along the long route of temperature and air humidity
-- Inside the folder the images are saved separately as well
 
 **Status: 26.05.2025**
