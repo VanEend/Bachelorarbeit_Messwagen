@@ -11,7 +11,7 @@ output:
 
 In this file differences between a reference sensor to the others are visualised Here I took Sensor_3 (3m above ground) as reference Sensor. The choice roots from measurement conventions for devices at this height. Additionally, Bias-correction was performed at the same height, whereas a cross-validation between all sensors where not performed.
 
-*Note:* Due to the moist adiabatic lapse rate being at Ts = 0.0069K/m (for T = 273.2K or 0°C) and Ts = 0.0036K/m (for T = 303K or 29.8°C) [Pal, 2001, P.68], the decrease in Temperature is negligible (in our case: 3m \* 0.0036K/m = 0.0108K decrease) and high degree differences (might) only occur due to device inaccuracy/bias.
+*Note:* Due to the moist adiabatic lapse rate being at T~s~ = 0.0069 K/m (for T = 273.2K or 0°C) and T~s~ = 0.0036K/m (for T = 303K or 29.8°C) [Pal, 2001, P.68], the decrease in Temperature is negligible (in our case: 3m $*$ 0.0036K/m = 0.0108K decrease) and high degree differences (might) only occur due to device inaccuracy/bias.
 
 Arya, S. Pal (2001), Introduction to Micrometeorology.Vereinigtes Königreich,Elsevier Science,2001.
 
@@ -71,7 +71,7 @@ Temperature
 #Open jpeg
 jpeg("../Images/Dev_between_sensors/temp.jpeg", height = 486, width = 780, res = 108)
 
-ggplot(anomaly, aes(x = Distance)) + #x-Axis
+p1 <- ggplot(anomaly, aes(x = Distance)) + #x-Axis
   geom_ribbon(aes(ymin = -0.1, ymax = 0.1, fill = "Instrumentenfehler"), alpha = 1) + #Filling
   geom_line(aes(y = Sensor1_T, color = "Sensor_0.5")) + #Sensor_0.5
   geom_line(aes(y = Sensor2_T, color = "Sensor_1")) + #Sensor_1
@@ -89,8 +89,14 @@ ggplot(anomaly, aes(x = Distance)) + #x-Axis
   theme_bw() + #Changing plot type
   theme(plot.title = element_text(hjust = 0.5)) #Center title
 
+p1
+
 #Close and save jpeg
 dev.off()
+```
+
+```{r, echo=FALSE, fig.align='center', fig.cap="Fig. 1: Deviation to Sensor_3 for temperature", fig.width=10, fig.height=4}
+p1
 ```
 
 Relative air humidity
@@ -99,7 +105,7 @@ Relative air humidity
 #Open jpeg
 jpeg("../Images/Dev_between_sensors/humidity.jpeg", height = 486, width = 780, res = 108)
 
-ggplot(anomaly, aes(x = Distance)) + #x-Axis
+p2 <- ggplot(anomaly, aes(x = Distance)) + #x-Axis
   geom_ribbon(aes(ymin = -1.5, ymax = 1.5, fill = "Instrumentenfehler"), alpha = 1) + #Filling
   geom_line(aes(y = Sensor1_LF, color = "Sensor_0.5")) + #Sensor_0.5
   geom_line(aes(y = Sensor2_LF, color = "Sensor_1")) + #Sensor_1
@@ -119,6 +125,10 @@ ggplot(anomaly, aes(x = Distance)) + #x-Axis
 
 #Close and save jpeg
 dev.off()
+```
+
+```{r, echo=FALSE, fig.align='center', fig.cap="Fig. 2: Deviation to Sensor_3 for humidity", fig.width=10, fig.height=4}
+p2
 ```
 
 # 4 Statistics

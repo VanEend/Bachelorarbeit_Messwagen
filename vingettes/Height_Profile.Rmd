@@ -7,11 +7,9 @@ output:
     toc: true
 ---
 
-# Height Profile
-
 This file calculates the height profile along both the short and long route. Differences between the GPS device and the digital elevation model (DEM) are displayed.
 
-## Import packages and files
+# 1 Import packages and files
 
 ```{r, message=FALSE, warning=FALSE}
 #Packages
@@ -22,8 +20,7 @@ l_lap <- read.table("../data/Distanz_&_Hohe_GR.csv", sep = ";", header = T)
 s_lap <- read.table("../data/Distanz_&_Hohe_KR.csv", sep = ";", header = T)
 ```
 
-## Plot
-
+# 2 Plot
 
 ```{r, echo=FALSE}
 #Color code
@@ -67,3 +64,7 @@ cowplot::plot_grid(p1, p2)
 #Close and save jpeg
 dev.off()
 ```
+```{r, echo=FALSE, fig.align='center', fig.cap="Fig. 1: Height profile along the long route (left) and the short route (right)", fig.width=10, fig.height=4}
+cowplot::plot_grid(p1, p2)
+```
+

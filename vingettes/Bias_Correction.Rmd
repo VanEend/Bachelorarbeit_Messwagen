@@ -92,3 +92,9 @@ cowplot::plot_grid(p1, p2)
 #Close and safe jpeg
 dev.off()
 ```
+
+```{r, echo=FALSE, fig.align='center', fig.cap="Fig. 1: Bias correction", fig.width=10, fig.height=4}
+cowplot::plot_grid(p1,p2)
+```
+
+
