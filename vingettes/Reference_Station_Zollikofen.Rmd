@@ -128,6 +128,11 @@ cowplot::plot_grid(p_temp, p_lfk, p_sundur, p_windspeed, p_winddir, nrow = 3, nc
 dev.off()
 ```
 
+```{r, echo=FALSE, fig.align='center', fig.cap="Fig. 1: Climatic situation at the MeteoSwiss station in Zollikofen", fig.width=10, fig.height=12}
+cowplot::plot_grid(p_temp, p_lfk, p_sundur, p_windspeed, p_winddir, nrow = 3, ncol = 2)
+```
+
+
 # 5 Statistics
 
 Calculating mean, minimum and maximum value of each variable

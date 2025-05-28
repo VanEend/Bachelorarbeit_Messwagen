@@ -72,3 +72,7 @@ cowplot::plot_grid(p2, p1, ncol = 2)
 #Close and save jpeg
 dev.off()
 ```
+
+```{r, echo=FALSE, fig.align='center', fig.cap="Fig. 1: Temperature (left) and humidity (right) evolution along the long route", fig.width=10, fig.height=4}
+cowplot::plot_grid(p2, p1, ncol = 2)
+```
