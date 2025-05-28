@@ -28,7 +28,7 @@ This file contains dataset needed and the file to create the height profile in J
 - Inside the folder the images are saved separately as well
 - The file *install_packages* installs all necessary packages into Julia if they are not installed already
 
-*Note:* Inside the folder *vingettes* an additonal R-based version of this folder was created. However, Julia performs better for dataset with many datapoints which results in a better graphic quality if executed on Julia.
+*Note:* Inside the folder *vingettes* an additional R-based version of this folder was created. However, Julia performs better for dataset with many datapoints which results in a better graphic quality if executed on Julia.
 
 ### Metadaten
 
@@ -100,5 +100,6 @@ This file contains following R Markdown files:
 - Pathways; used to create a temperature and relative air humidity pathway along the long route
 - Reference_Station_Zollikofen; used to create graphs to visualise climatic conditions during measurement period at the reference station Zollikofen from MeteoSwiss
 - Statistics; used to determine statistics of the long route
+- Vertical_Profile; Creates a vertical profile of temperature and humidity along the long route. This file is a R-based version of the Julia file inside the *Julia* folder. I recommend using the Julia version due to worse graphic performance on this R-based version.
 
-**Status: 26.05.2025**
+**Status: 28.05.2025**
