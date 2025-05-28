@@ -333,7 +333,6 @@ p1
 #Close and save jpeg
 dev.off()
 ```
-
 ```{r, echo=FALSE}
 #Make plot adjustment
 p2 <- p2 +
@@ -359,6 +358,9 @@ p2
 #Close and save jpeg
 dev.off()
 ```
+```{r, echo=FALSE, fig.align='center', fig.cap="Fig. 1: Height profile of temperature (left) and humidity (right)", fig.width=10, fig.height=4}
+cowplot::plot_grid(p1,p2)
+```
 
 # 5 Statistics
 
@@ -368,18 +370,18 @@ In this step, a, b, c and d values of both temperature and humidity are displaye
 #Temperature
 mean_t <- data.frame(1)
 mean_t["Grösse"] <- c("Temperatur")
-mean_t["a"] <- vert_t_mean$a
-mean_t["b"] <- vert_t_mean$b
-mean_t["c"] <- vert_t_mean$c
-mean_t["d"] <- vert_t_mean$d
+mean_t["a"] <- round(vert_t_mean$a, 2)
+mean_t["b"] <- round(vert_t_mean$b, 2)
+mean_t["c"] <- round(vert_t_mean$c, 2)
+mean_t["d"] <- round(vert_t_mean$d, 2)
 
 #Humidity
 mean_lfk <- data.frame(1)
 mean_lfk["Grösse"] <- c("Luftfeuchtigkeit")
-mean_lfk["a"] <- vert_lfk_mean$a
-mean_lfk["b"] <- vert_lfk_mean$b
-mean_lfk["c"] <- vert_lfk_mean$c
-mean_lfk["d"] <- vert_lfk_mean$d
+mean_lfk["a"] <- round(vert_lfk_mean$a, 2)
+mean_lfk["b"] <- round(vert_lfk_mean$b, 2)
+mean_lfk["c"] <- round(vert_lfk_mean$c, 2)
+mean_lfk["d"] <- round(vert_lfk_mean$d,2 )
 
 #Combine and display
 mean_stat <- rbind(mean_t, mean_lfk)
@@ -387,4 +389,11 @@ mean_stat <- dplyr::select(mean_stat, -X1)
 
 knitr::kable(mean_stat, caption = "Kubische Parameter der mittleren Temperaturveränderung")
 ```
+
+According to this table, following equation can be written for the mean temperature evolution:
+$$\overline{T(h)} = `r mean_stat[1, "a"]`x^3 + `r mean_stat[1, "b"]`x^2 + `r mean_stat[1, "c"]`x + `r mean_stat[1, "d"]`$$
+
+And for the relative air humidity:
+
+$$\overline{\varphi(h)} = `r mean_stat[2, "a"]`x^3 + `r mean_stat[2, "b"]`x^2 + `r mean_stat[2, "c"]`x + `r mean_stat[2, "d"]`$$
 
