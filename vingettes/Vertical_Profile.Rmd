@@ -292,16 +292,16 @@ In a second step, all extreme values are plotted. This includes mean (in black),
 #Temperature
 p1 <- p1 +
   #Plot extreme values of temperature
-  geom_path(data = plot_t_extreme, aes(x = min, y = h, color = "Spannweite")) + #Min
-  geom_path(data = plot_t_extreme, aes(x = max, y = h), color = "red") + #Max
-  geom_path(data = plot_t_extreme, aes(x = mean, y = h, color = "Mittelwert")) #Mean
+  geom_path(data = plot_t_extreme, aes(x = min, y = h, color = "Spannweite"), size = 1.5) + #Min
+  geom_path(data = plot_t_extreme, aes(x = max, y = h), color = "red", size = 1.5) + #Max
+  geom_path(data = plot_t_extreme, aes(x = mean, y = h, color = "Mittelwert"), size = 1.5) #Mean
 
 #Humidity
 p2 <- p2 +
   #Plot extreme values of temperature
-  geom_path(data = plot_lfk_extreme, aes(x = min, y = h, color = "Spannweite")) + #Min
-  geom_path(data = plot_lfk_extreme, aes(x = max, y = h), color = "red") + #Max
-  geom_path(data = plot_lfk_extreme, aes(x = mean, y = h, color = "Mittelwert")) #Mean
+  geom_path(data = plot_lfk_extreme, aes(x = min, y = h, color = "Spannweite"), size = 1.5) + #Min
+  geom_path(data = plot_lfk_extreme, aes(x = max, y = h), color = "red", size = 1.5) + #Max
+  geom_path(data = plot_lfk_extreme, aes(x = mean, y = h, color = "Mittelwert"), size = 1.5) #Mean
 ```
 
 ## 4.3 Aesthetics and Save
