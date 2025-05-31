@@ -103,4 +103,8 @@ This file contains following R Markdown files:
 - Vertical_Profile; Creates a vertical profile of temperature and humidity along the long route. This file is a R-based version of the Julia file inside the *Julia* folder. I recommend using the Julia version due to worse graphic performance on this R-based version.
 - In addition for every file a html file is provided to have a brief overview of the result
 
+## Graphic display problems
+
+If for some reason the R-Markdown returns a error message for displaying graphics, please check if the decimal points of the datasets are denoted as a dot. If this should not be the case, please change the decimal point into a dot and run the program again. The program should now be able to display graphics again.
+
 **Status: 28.05.2025**
