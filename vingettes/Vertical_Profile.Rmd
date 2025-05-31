@@ -288,7 +288,7 @@ for(k in 2:235){
 
 In a second step, all extreme values are plotted. This includes mean (in black), minimum and maximum (both in red).
 
-```{r, echo=FALSE}
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
 #Temperature
 p1 <- p1 +
   #Plot extreme values of temperature
