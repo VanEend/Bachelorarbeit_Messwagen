@@ -123,6 +123,8 @@ p2 <- ggplot(anomaly, aes(x = Distance)) + #x-Axis
   theme_bw() + #Changing plot type
   theme(plot.title = element_text(hjust = 0.5)) #Center title
 
+p2
+
 #Close and save jpeg
 dev.off()
 ```

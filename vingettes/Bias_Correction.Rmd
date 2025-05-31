@@ -16,7 +16,7 @@ This file plots the measured values of the sensor_3 vs. the permanent measuremen
 library(ggplot2)
 
 #File
-data <- readr::read_csv2("../data/Bias_CSV.csv")
+data <- read.table("../data/Bias_CSV.csv", sep = ";", header = T)
 ```
 
 # 2 Errorvalues
@@ -59,14 +59,20 @@ jpeg("../Images/Bias_Correction/Bias_corr.jpeg", height = 486, width = 1200, res
 
 #Creating temperature plot
 p1 <- ggplot(data, aes(x = Messort)) + #x-Axis
-  geom_errorbar(aes(ymin = T_Messwagen - eWt, ymax = T_Messwagen + eWt), width = 0.1) + #Errorbar Messwagen
-  geom_errorbar(aes(ymin = T_Messstation - eSt, ymax = T_Messstation + eSt), width = 0.1) + #Errorbar Messstation
-  geom_point(aes(y = T_Messstation, color = "Referenzstation"), size = 2.5) + #Points Messstation
+  #Errorbar Messwagen
+  geom_errorbar(aes(ymin = T_Messwagen - eWt, ymax = T_Messwagen + eWt), 
+              width = 0.2, color = "red", position = position_nudge(x = 0.02)) +
+   #Errorbar Messstation
+  geom_errorbar(aes(ymin = T_Messstation - eSt, ymax = T_Messstation + eSt),
+              width = 0.2, color = "deepskyblue4", position = position_nudge(x = -0.02)) +
+  #Points Messstation
+  geom_point(aes(y = T_Messstation, color = "Referenzstation"), size = 2.5) + 
   geom_point(aes(y = T_Messwagen, color = "Messwagen"), size = 2.5) + #Points Messwagen
   labs(y = "Temperatur [°C]", x = "Messort", color = "") + #Axis label & Legend
   ggtitle("Bias Korrektur der Temperatur") + #Title
   scale_color_manual(values = colors) + #Legend element color
-  annotate(geom = "label", x = 0.6, y = 1.79, label = "I", family = "serif", size = 6) + #Plot number
+  #Plot number
+  annotate(geom = "label", x = 0.6, y = 1.79, label = "I", family = "serif", size = 6) + 
   theme_bw() + #Plot aesthetic
   theme(legend.position = "none") + #Only one legend needed, so hide this
   theme(plot.margin = margin(0.2, 2, 0.2, 0.2, "cm")) + #Set Plot margins
@@ -74,14 +80,20 @@ p1 <- ggplot(data, aes(x = Messort)) + #x-Axis
 
 #Creating relative air humidity plot
 p2 <- ggplot(data, aes(x = Messort)) + #x-Axis
-  geom_errorbar(aes(ymin = LF_Messwagen - eWlfk, ymax = LF_Messwagen + eWlfk), width = 0.1) + #Errorbar Messwagen
-  geom_errorbar(aes(ymin = LF_Messstation - eSlfk, ymax = LF_Messstation + eSlfk), width = 0.1) + #Errorbar Messstation
-  geom_point(aes(y = LF_Messstation, color = "Referenzstation"), size = 2.5) + #Points Messstation
+  #Errorbar Messwagen
+  geom_errorbar(aes(ymin = LF_Messwagen - eWlfk, ymax = LF_Messwagen + eWlfk),
+                width = 0.2, color = "red") +
+  #Errorbar Messstation
+  geom_errorbar(aes(ymin = LF_Messstation - eSlfk, ymax = LF_Messstation + eSlfk)
+                , width = 0.2, color = "deepskyblue4") +
+  #Points Messstation
+  geom_point(aes(y = LF_Messstation, color = "Referenzstation"), size = 2.5) + 
   geom_point(aes(y = LF_Messwagen, color = "Messwagen"), size = 2.5) + #Points Messwagen
   labs(y = "Luftfeuchtigkeit [%]", x = "Messort", color = "") + #Axis label & Legend
   ggtitle("Bias Korrektur der Luftfeuchtigkeit") + #Title
   scale_color_manual(values = colors) + #Legend element color
-  annotate(geom = "label", x = 0.6, y = 81.5, label = "II", family = "serif", size = 6) + #Plot number
+  #Plot number
+  annotate(geom = "label", x = 0.6, y = 81.5, label = "II", family = "serif", size = 6) +
   theme_bw() + #Plot aesthetic
   theme(plot.margin = margin(0.2, 0.2, 0.2, -1, "cm")) + #Set Plot margins
   theme(plot.title = element_text(hjust = 0.5)) #Center title

@@ -73,10 +73,25 @@ Temperature
 
 ```{r, echo=FALSE}
 Statistics <- c("Minimum", "Maximum", "Mean","Variance_to_Sensor_3")
-Sensor_1t <- c(min(l_lap$Sensor1_T), max(l_lap$Sensor1_T), mean(l_lap$Sensor1_T), mean(anomaly$Sensor1_T))
-Sensor_2t <- c(min(l_lap$Sensor2_T), max(l_lap$Sensor2_T), mean(l_lap$Sensor2_T), mean(anomaly$Sensor2_T))
-Sensor_3t <- c(min(l_lap$Sensor3_T), max(l_lap$Sensor3_T), mean(l_lap$Sensor3_T), mean(anomaly$Sensor3_T))
-Sensor_4t <- c(min(l_lap$Sensor4_T), max(l_lap$Sensor4_T), mean(l_lap$Sensor4_T), mean(anomaly$Sensor4_T))
+Sensor_1t <- c(round(min(l_lap$Sensor1_T), 2),
+               round(max(l_lap$Sensor1_T), 2),
+               round(mean(l_lap$Sensor1_T), 2),
+               round(mean(anomaly$Sensor1_T), 2))
+
+Sensor_2t <- c(round(min(l_lap$Sensor2_T), 2),
+               round(max(l_lap$Sensor2_T), 2),
+               round(mean(l_lap$Sensor2_T), 2),
+               round(mean(anomaly$Sensor2_T),2))
+
+Sensor_3t <- c(round(min(l_lap$Sensor3_T), 2),
+               round(max(l_lap$Sensor3_T), 2),
+               round(mean(l_lap$Sensor3_T), 2),
+               round(mean(anomaly$Sensor3_T), 2))
+
+Sensor_4t <- c(round(min(l_lap$Sensor4_T), 2),
+               round(max(l_lap$Sensor4_T), 2),
+               round(mean(l_lap$Sensor4_T), 2),
+               round(mean(anomaly$Sensor4_T), 2))
 
 #Create dataframe
 stat_T <- data.frame(Statistics, Sensor_1t, Sensor_2t, Sensor_3t, Sensor_4t)
@@ -89,10 +104,25 @@ knitr::kable(stat_T, caption = "Statistik Temperatur",
 Relative air humidity
 
 ```{r, echo=FALSE}
-Sensor_1lfk <- c(min(l_lap$Sensor1_LF), max(l_lap$Sensor1_LF), mean(l_lap$Sensor1_LF), mean(anomaly$Sensor1_LF))
-Sensor_2lfk <- c(min(l_lap$Sensor2_LF), max(l_lap$Sensor2_LF), mean(l_lap$Sensor2_LF), mean(anomaly$Sensor2_LF))
-Sensor_3lfk <- c(min(l_lap$Sensor3_LF), max(l_lap$Sensor3_LF), mean(l_lap$Sensor3_LF), mean(anomaly$Sensor3_LF))
-Sensor_4lfk <- c(min(l_lap$Sensor4_LF), max(l_lap$Sensor4_LF), mean(l_lap$Sensor4_LF), mean(anomaly$Sensor4_LF))
+Sensor_1lfk <- c(round(min(l_lap$Sensor1_LF), 2),
+                 round(max(l_lap$Sensor1_LF), 2),
+                 round(mean(l_lap$Sensor1_LF), 2),
+                 round(mean(anomaly$Sensor1_LF), 2))
+
+Sensor_2lfk <- c(round(min(l_lap$Sensor2_LF), 2),
+                 round(max(l_lap$Sensor2_LF), 2),
+                 round(mean(l_lap$Sensor2_LF), 2),
+                 round(mean(anomaly$Sensor2_LF), 2))
+
+Sensor_3lfk <- c(round(min(l_lap$Sensor3_LF), 2),
+                 round(max(l_lap$Sensor3_LF), 2),
+                 round(mean(l_lap$Sensor3_LF), 2),
+                 round(mean(anomaly$Sensor3_LF), 2))
+
+Sensor_4lfk <- c(round(min(l_lap$Sensor4_LF), 2),
+                 round(max(l_lap$Sensor4_LF), 2),
+                 round(mean(l_lap$Sensor4_LF), 2),
+                 round(mean(anomaly$Sensor4_LF), 2))
 
 #Create table
 stat_LFK <- data.frame(Statistics,Sensor_1lfk,Sensor_2lfk,Sensor_3lfk,Sensor_4lfk)
