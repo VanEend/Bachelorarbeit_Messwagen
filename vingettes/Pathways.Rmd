@@ -44,7 +44,7 @@ p1 <- ggplot(lap, aes(x = Distanz_Runsum)) + #x-Axis
   labs(x = "Distanz [m]", y = "Luftfeuchtigkeit [%]", color = "Legende") + #Axis label & Legend
   scale_color_manual(values = colors) + #Coloring legend
   ggtitle("Luftfeuchtigkeitsverlauf") + #Adding title
-  annotate(geom = "label", x = 0, y = 81, label = "II", family = "serif", size = 6) + #Plot number
+  annotate(geom = "label", x = 0, y = 81, label = "b", family = "serif", size = 6) + #Plot number
   theme_bw() + #Changing plot type
   theme(plot.margin = margin(0.2, 0.2, 0.2, -1, "cm")) + #Set Plot margins
   theme(plot.title = element_text(hjust = 0.5)) #Center title
@@ -61,7 +61,7 @@ p2 <- ggplot(lap, aes(x = Distanz_Runsum)) + #x-Axis
   labs(x = "Distanz [m]", y = "Temperatur [°C]", color = "Legende" ) + #Axis label & Legend
   scale_color_manual(values = colors) + #Coloring legend
   ggtitle("Temperaturverlauf") + #Adding title
-  annotate(geom = "label", x = 4242, y = 1.93, label = "I", family = "serif", size = 6) + #Plot number
+  annotate(geom = "label", x = 4242, y = 1.93, label = "a", family = "serif", size = 6) + #Plot number
   theme_bw() + #Changing plot type
   theme(legend.position = "none") + #Only one legend needed, so hide this
   theme(plot.margin = margin(0.2, 2, 0.2, 0.2, "cm")) + #Set Plot margins

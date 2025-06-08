@@ -72,7 +72,7 @@ p1 <- ggplot(data, aes(x = Messort)) + #x-Axis
   ggtitle("Bias Korrektur der Temperatur") + #Title
   scale_color_manual(values = colors) + #Legend element color
   #Plot number
-  annotate(geom = "label", x = 0.6, y = 1.79, label = "I", family = "serif", size = 6) + 
+  annotate(geom = "label", x = 0.6, y = 1.79, label = "a", family = "serif", size = 6) + 
   theme_bw() + #Plot aesthetic
   theme(legend.position = "none") + #Only one legend needed, so hide this
   theme(plot.margin = margin(0.2, 2, 0.2, 0.2, "cm")) + #Set Plot margins
@@ -93,7 +93,7 @@ p2 <- ggplot(data, aes(x = Messort)) + #x-Axis
   ggtitle("Bias Korrektur der Luftfeuchtigkeit") + #Title
   scale_color_manual(values = colors) + #Legend element color
   #Plot number
-  annotate(geom = "label", x = 0.6, y = 81.5, label = "II", family = "serif", size = 6) +
+  annotate(geom = "label", x = 0.6, y = 81.5, label = "b", family = "serif", size = 6) +
   theme_bw() + #Plot aesthetic
   theme(plot.margin = margin(0.2, 0.2, 0.2, -1, "cm")) + #Set Plot margins
   theme(plot.title = element_text(hjust = 0.5)) #Center title

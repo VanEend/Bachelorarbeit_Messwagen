@@ -85,7 +85,7 @@ jpeg("../Images/Reference_Station_Zollikofen/Referenzstation.jpeg", height = 100
 p_temp <- ggplot(data = station, aes(x = time, y = temp, group = F)) + #Add variables
   geom_line() + geom_point(shape = 16) + #Add points + line
   xlab("Zeit") + ylab("Temperatur [°C]") + ggtitle("Mittlere Temperatur über 10 Minuten") + #Add title + axis label
-  annotate(geom = "label", x = 1, y = 0.98, label = "I", family = "serif", size = 6) + #Plot number
+  annotate(geom = "label", x = 1, y = 0.98, label = "a", family = "serif", size = 6) + #Plot number
   theme_bw() + #Change Plot motive
   theme(plot.title = element_text(hjust = 0.5)) #Center title
 
@@ -93,7 +93,7 @@ p_temp <- ggplot(data = station, aes(x = time, y = temp, group = F)) + #Add vari
 p_lfk <- ggplot(data = station, aes(x = time, y = lfk, group = F)) + #Add variables
   geom_line() + geom_point(shape = 16) + #Add points + line
   xlab("Zeit") + ylab("Luftfeuchtigkeit [%]") + ggtitle("Mittlere Luftfeuchtigkeit über 10 Minuten") + #Add title + axis label
-  annotate(geom = "label", x = 13, y = 77.8, label = "II", family = "serif", size = 6) + #Plot number
+  annotate(geom = "label", x = 13, y = 77.8, label = "b", family = "serif", size = 6) + #Plot number
   theme_bw() + #Change Plot motive
   theme(plot.title = element_text(hjust = 0.5)) #Center title
 
@@ -102,7 +102,7 @@ p_sundur <- ggplot(data = station, aes(x = time, y = sundur, group = F)) + #Add 
   geom_line() + geom_point(shape = 16) + #Add points + line
   xlab("Zeit") + ylab("Sonnenscheindauer [min]") + ggtitle("Sonnenscheindauer in 10 Minuten") + #Add title + axis label
   ylim(0, 10) +
-  annotate(geom = "label", x = 1, y = 9.6, label = "III", family = "serif", size = 6) + #Plot number
+  annotate(geom = "label", x = 1, y = 9.6, label = "c", family = "serif", size = 6) + #Plot number
   theme_bw() + #Change Plot motive
   theme(plot.title = element_text(hjust = 0.5)) #Center title
 
@@ -110,7 +110,7 @@ p_sundur <- ggplot(data = station, aes(x = time, y = sundur, group = F)) + #Add 
 p_windspeed <- ggplot(data = station, aes(x = time, y = windspeed, group = F)) + #Add variables
   geom_line() + geom_point(shape = 16) + #Add points + line
   xlab("Zeit") + ylab("Windgeschwindigkeit [km/h]") + ggtitle("Mittlere Windgeschwindigkeit über 10 Minuten") + #Add title + axis label
-  annotate(geom = "label", x = 1, y = 4.15, label = "IV", family = "serif", size = 6) + #Plot number
+  annotate(geom = "label", x = 1, y = 4.15, label = "d", family = "serif", size = 6) + #Plot number
   theme_bw() + #Change Plot motive
   theme(plot.title = element_text(hjust = 0.5)) #Center title
 
