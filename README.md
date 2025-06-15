@@ -96,6 +96,7 @@ This dataset contains measurement values of the MeteoSwiss station Zollikofen.
 This file contains following R Markdown files:
 - Bias_Correction; used to make graphics for the bias correction
 - Dev_between_sensors; used to create graphics for the deviation to Sensor_3 from the long route
+- Geschw_Graph; used to create graph to analyse the effect of different speed on GPS precision
 - Height_Profile; used to create a height profile along the short and the long route
 - Pathways; used to create a temperature and relative air humidity pathway along the long route
 - Reference_Station_Zollikofen; used to create graphs to visualise climatic conditions during measurement period at the reference station Zollikofen from MeteoSwiss
