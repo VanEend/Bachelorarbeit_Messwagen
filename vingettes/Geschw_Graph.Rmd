@@ -1,0 +1,65 @@
+---
+title: "Geschwindigkeits Graph"
+author: "Eichmann_Gian_Luca"
+date: "2025-06-15"
+output: 
+  html_document:
+    toc: true
+---
+
+# Load files 
+
+```{r, message=FALSE}
+#Slow lap
+R1 <- read.table("../data/Kurze_Runde_1.csv", header = T, sep = ";")
+
+#Mean lap
+R2 <- read.table("../data/Kurze_Runde_2.csv", header = T, sep = ";")
+
+#Fast lap
+R3 <- read.table("../data/Kurze_Runde_3.csv", header = T, sep = ";")
+```
+
+# Select rows
+
+```{r, message=FALSE}
+rundgang1 <- R1[, c("Sensor.0.5m", "Sensor.1m", "Sensor.2m", "Sensor.3m")]
+rundgang2 <- R2[, c("Sensor.0.5m", "Sensor.1m", "Sensor.2m", "Sensor.3m")]
+rundgang3 <- R3[, c("Sensor.0.5m", "Sensor.1m", "Sensor.2m", "Sensor.3m")]
+```
+
+# Create plot
+
+```{r}
+#Open jpeg
+jpeg("../Images/Geschw_Graph/Geschw_Graph.jpeg", height = 486, width = 600, res = 108)
+
+farben <- c("red", "blue", "green", "purple")
+sensoren <- c("Sensor 0.5 m", "Sensor 1 m", "Sensor 2 m", "Sensor 3 m")
+
+# Layout
+layout(matrix(c(1, 4, 2, 4, 3, 4), nrow = 3, byrow = TRUE), widths = c(4, 1))  
+par(mar = c(4, 4, 3, 1), xpd = TRUE)  
+
+# Rundgang 1
+matplot(rundgang1, type = "l", lty = 1, col = farben,
+        main = "a) Runde langsame Geschwindigkeit", xlab = "Anzahl Messungen", ylab = "Temperatur (°C)")
+
+# Rundgang 2
+matplot(rundgang2, type = "l", lty = 1, col = farben,
+        main = "b) Runde mittlere Geschwindigkeit", xlab = "Anzahl Messungen", ylab = "Temperatur (°C)")
+
+# Rundgang 3
+matplot(rundgang3, type = "l", lty = 1, col = farben,
+        main = "c) Runde schnelle Geschwindigkeit", xlab = "Anzahl Messungen", ylab = "Temperatur (°C)")
+
+# LEGENDE 
+par(mar = c(0, 0, 0, 0))
+plot.new() 
+legend("center", legend = sensoren, col = farben, lty = 1, cex = 1.0, bty = "n")
+
+#Close and safe jpeg
+dev.off()
+```
+
+
